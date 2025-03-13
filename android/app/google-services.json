@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "486764246508",
+    "project_id": "kineticx-62280",
+    "storage_bucket": "kineticx-62280.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486764246508:android:21b3be7efe547b89f23cc9",
+        "android_client_info": {
+          "package_name": "com.example.kineticx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "486764246508-a3u2n20778jt8f3v9ht0dlm5qjbfu52l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kineticx",
+            "certificate_hash": "9fb3ab41f8940f0fee725dab387f922148ea0557"
+          }
+        },
+        {
+          "client_id": "486764246508-uuu7ivofbhadg8isicut670kjq30af6h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsIb7mUiHysOLMFba42yw0QIRkmkfxDzs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "486764246508-uuu7ivofbhadg8isicut670kjq30af6h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "486764246508-but7lrfg5urat4nk8g29pmfn6rb444j3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.kineticx"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

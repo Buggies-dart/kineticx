@@ -1,0 +1,2 @@
+C:/Users/user/Desktop/kineticx/android/app/.cxx/Debug/43596h2t/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/user/Desktop/kineticx/android/app/.cxx/Debug/43596h2t/armeabi-v7a/CMakeFiles/rebuild_cache.dir
