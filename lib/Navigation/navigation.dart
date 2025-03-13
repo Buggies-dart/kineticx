@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kineticx/Pages/analytics.dart';
 import 'package:kineticx/Pages/explore.dart';
 import 'package:kineticx/Pages/Home/home.dart';
-import 'package:kineticx/Pages/userprofile.dart';
+import 'package:kineticx/Pages/Profile/userprofile.dart';
 import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/components.dart';
 
