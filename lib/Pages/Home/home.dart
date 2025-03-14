@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kineticx/API/controllers/api_controller.dart';
 import 'package:kineticx/Pages/Home/controllers/homecontroller.dart';
 import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/components.dart';
@@ -13,11 +14,24 @@ class MyHomePage extends ConsumerStatefulWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(HomeController.userName);
+  }
+
 DateTime? _lastPressedAt;
 
   @override
   Widget build(BuildContext context) {
+// Theme
 final theme = Theme.of(context);
+
+// Screen Size
+final sizeHeight = MediaQuery.of(context).size.height;
+final sizeWidth = MediaQuery.of(context).size.width;
+
+// State Management
 final userNameAsyncValue = ref.watch(HomeController.userName);
 final displayName =  userNameAsyncValue.when(data: (username){
 if (username != null) {
@@ -25,8 +39,19 @@ return Text(username, style: theme.textTheme.displayLarge) ; } else { return con
 }
 }, error:(error, _) => Text('Error: $error'),  loading: ()=> const Text('')
 );
-final sizeHeight = MediaQuery.of(context).size.height;
-final sizeWidth = MediaQuery.of(context).size.width;
+
+final bodyPartListAsyncValue = ref.watch(bodyPartList);
+
+final bodyParts = bodyPartListAsyncValue.when(data: (parts) {
+return SizedBox( height: sizeHeight/3.8,
+  child: ListView.builder(itemCount: parts.length, scrollDirection: Axis.horizontal, itemBuilder: (context, index) {
+  final part = parts[index];
+  return popularWorkoutsContainer(sizeHeight, sizeWidth, theme, part['bodyPart']);
+  }),
+);
+}, error: (err, stack) => Center(child: Text('Error: $err'),), loading: () => const Center(child: CircularProgressIndicator()));
+
+
 
 
 return  WillPopScope( onWillPop: () async {
@@ -66,16 +91,8 @@ decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadiu
     Padding( padding:  EdgeInsets.only(bottom: sizeHeight/70, left: sizeHeight/70,  top:  sizeHeight/70),
     child: Text('Popular Workouts', style: theme.textTheme.titleMedium,),
     ),
-    
-    SingleChildScrollView( scrollDirection: Axis.horizontal,
-    child: Row(
-    children: [
-    popularWorkoutsContainer(sizeHeight, sizeWidth, theme),
-    SizedBox( width: sizeWidth/20),
-    popularWorkoutsContainer(sizeHeight, sizeWidth, theme),
-    ],
-      ),
-    ),
+
+    bodyParts,
     
     Padding(
     padding: EdgeInsets.only(bottom: sizeHeight/70, left: sizeHeight/70, top:  sizeHeight/70),
@@ -135,13 +152,15 @@ Positioned( right: 20,
 );
   }
 
-Widget popularWorkoutsContainer(double sizeHeight, double sizeWidth, ThemeData theme) {
+Widget popularWorkoutsContainer(double sizeHeight, double sizeWidth, ThemeData theme, String text) {
     return Stack(
 children: [ 
-Container( height: sizeHeight/4, width: sizeWidth/1.2, 
-decoration: BoxDecoration(
-image: DecorationImage(image: AssetImage('assets/images/sportywoman.png'), fit: BoxFit.cover),
-borderRadius: BorderRadius.all(Radius.elliptical(20, 20)), color: lilacPurple),
+Padding( padding: EdgeInsets.only(right: sizeWidth/30),
+  child: Container( height: sizeHeight/4, width: sizeWidth/1.2, 
+  decoration: BoxDecoration(
+  image: DecorationImage(image: AssetImage('assets/images/sportywoman.png'), fit: BoxFit.cover),
+  borderRadius: BorderRadius.all(Radius.elliptical(20, 20)), color: lilacPurple),
+  ),
 ),
 Positioned.fill( right: sizeWidth/6,
 child: Container( 
@@ -150,13 +169,14 @@ decoration: BoxDecoration(gradient: LinearGradient(colors: [Colors.black, Colors
 ),
 ),
 
-Row(
+Row( 
 children: [
 Padding(
 padding:  EdgeInsets.all(sizeWidth/16),
 child: Column( crossAxisAlignment: CrossAxisAlignment.start,
 children: [
-Text('Lower Body\nTraining', style: theme.textTheme.titleLarge,),
+SizedBox( width: sizeWidth/2.5,
+child: Text('$text\nTraining', style: theme.textTheme.titleLarge,)),
 SizedBox(height: sizeHeight/50),
 labelContainer(sizeHeight, sizeWidth, Icons.water_drop_outlined, '500 Kcal', sizeWidth/4,),
 SizedBox(height: sizeHeight/50),
@@ -164,7 +184,7 @@ labelContainer(sizeHeight, sizeWidth, Icons.alarm_add_outlined, '50 Min', sizeWi
 ],
 ),
 ),
-SizedBox( width: sizeWidth/8),
+SizedBox(width: sizeWidth/2.5 - sizeWidth/4),
 Icon(Icons.play_circle_fill, color: theme.primaryColor, size: 60) 
 ],
 )
