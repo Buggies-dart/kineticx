@@ -17,8 +17,10 @@ static const String bellyfat = 'assets/images/bellyfat.png';
 static const String oneKsteps = 'assets/images/1Kstepschallenge.png';
 static const String cupsofwater = 'assets/images/cupsofwaterchallenge.png';
 static const String sprint = 'assets/images/sprintchallenge.png';
-
-
+static const String backImage = 'assets/images/back_image.png';
+static const String chestImage = 'assets/images/chest_image.png';
+static const String lowerarmsImage = 'assets/images/lower_arm_image.png';
+static const String cardioImage = 'assets/images/cardio_image.png';
 }
 
 

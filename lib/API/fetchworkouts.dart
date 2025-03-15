@@ -1,14 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:kineticx/Utils/pngs.dart';
 
 
 class ExerciseDBApi {
+String apiKey = 'f7909e53admshf1e995473477e5ep1e304bjsn9e0a92902361';
+String apiHost = 'exercisedb.p.rapidapi.com';
 
-static Future<List<Map<String, dynamic>>> bodyPartList() async {
-
+Future<List<Map<String, dynamic>>> bodyPartList() async {
 final url = Uri.parse('https://exercisedb.p.rapidapi.com/exercises/bodyPartList');
-String apiKey = Platform.environment['API_KEY'] ?? 'default_value';
 
 if (apiKey.isEmpty) {
 throw Exception('API key is missing. Set the API_KEY environment variable.');
@@ -16,8 +17,8 @@ throw Exception('API key is missing. Set the API_KEY environment variable.');
 
 final response = await http.get(url,
 headers: {
-  'X-RapidAPI-Key' : 'f7909e53admshf1e995473477e5ep1e304bjsn9e0a92902361',
-  'X-RapidAPI-Host' : 'exercisedb.p.rapidapi.com'
+  'X-RapidAPI-Key' : apiKey,
+  'X-RapidAPI-Host' : apiHost,
 });
 if (response.statusCode == 200) {
 List<dynamic> body = jsonDecode(response.body);
@@ -32,18 +33,59 @@ return  bodyPartsWithImages;
 throw  Exception('Failed to load exercises from API: ${response.statusCode}');
 }
 }
+
+
+
+Future<List<String>> targetBodyParts() async {
+final url = Uri.parse('https://exercisedb.p.rapidapi.com/exercises/targetList');
+if (apiKey.isEmpty) {
+throw Exception('API key is missing. Set the API_KEY environment variable.');
+}
+final response = await http.get(url,
+headers: {
+  'X-RapidAPI-Key' : apiKey,
+  'X-RapidAPI-Host' : apiHost,
+});
+if (response.statusCode == 200) {
+List<dynamic> body = jsonDecode(response.body);
+return body.map((dynamic item) => item.toString()).toList();
+}
+else {
+throw Exception('Failed to load exercises from API: ${response.statusCode}');
+}
+}
+Future<List<String>> target() async {
+final url = Uri.parse('https://exercisedb.p.rapidapi.com/exercises/target/abductors?limit=10&offset=0');
+if (apiKey.isEmpty) {
+throw Exception('API key is missing. Set the API_KEY environment variable.');
+}
+final response = await http.get(url,
+headers: {
+  'X-RapidAPI-Key' : apiKey,
+  'X-RapidAPI-Host' : apiHost,
+});
+if (response.statusCode == 200) {
+List<dynamic> body = jsonDecode(response.body);
+print(body);
+return body.map((dynamic item) => item.toString()).toList();
+}
+else {
+throw Exception('Failed to load exercises from API: ${response.statusCode}');
+}
+}
+
  // Function to map body part to image
-static String getImageForBodyPart(String bodyPart) {
+ String getImageForBodyPart(String bodyPart) {
 switch (bodyPart.toLowerCase()) {
-case 'chest': return 'assets/chest_image.png';
-case 'back': return 'assets/back_image.png';
-case 'arms': return 'assets/arms_image.png';
-case 'shoulders': return 'assets/shoulders_image.png';
-case 'legs': return 'assets/legs_image.png';
-case 'abs': return 'assets/abs_image.png';
-case 'glutes': return 'assets/glutes_image.png';
-case 'calves': return 'assets/calves_image.png';
-default: return 'assets/default_image.png'; 
+case 'chest': return Images.chestImage;
+case 'back': return Images.backImage;
+case 'cardio': return Images.cardioImage;
+case 'lower arms': return Images.lowerarmsImage;
+case 'legs': return 'assets/images/sportywoman.png';
+case 'abs': return 'assets/images/sportywoman.png';
+case 'glutes': return 'assets/images/sportywoman.png';
+case 'calves': return 'assets/images/sportywoman.png';
+default: return 'assets/images/sportywoman.png';
 }
 }
 }

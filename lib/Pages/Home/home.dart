@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kineticx/API/controllers/api_controller.dart';
+import 'package:kineticx/Pages/Home/Widgets/floatingactionbutton.dart';
 import 'package:kineticx/Pages/Home/controllers/homecontroller.dart';
 import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/components.dart';
@@ -40,13 +40,13 @@ return Text(username, style: theme.textTheme.displayLarge) ; } else { return con
 }, error:(error, _) => Text('Error: $error'),  loading: ()=> const Text('')
 );
 
-final bodyPartListAsyncValue = ref.watch(bodyPartList);
+final bodyPartListAsyncValue = ref.watch(HomeController.bodyPartList);
 
 final bodyParts = bodyPartListAsyncValue.when(data: (parts) {
 return SizedBox( height: sizeHeight/3.8,
   child: ListView.builder(itemCount: parts.length, scrollDirection: Axis.horizontal, itemBuilder: (context, index) {
   final part = parts[index];
-  return popularWorkoutsContainer(sizeHeight, sizeWidth, theme, part['bodyPart']);
+  return popularWorkoutsContainer(sizeHeight, sizeWidth, theme, part['bodyPart'], part['image']);
   }),
 );
 }, error: (err, stack) => Center(child: Text('Error: $err'),), loading: () => const Center(child: CircularProgressIndicator()));
@@ -66,54 +66,68 @@ return  WillPopScope( onWillPop: () async {
    return true;
  } 
 },
-  child: Scaffold( 
-  body: SingleChildScrollView( scrollDirection: Axis.vertical,
-    child: SafeArea(
-  child: Padding( padding:  EdgeInsets.only(left: sizeWidth/30),
-  child: Column( crossAxisAlignment: CrossAxisAlignment.start,
+  child: Scaffold(
+  body: Stack(
+    children: [ SingleChildScrollView( scrollDirection: Axis.vertical,
+      child: SafeArea(
+    child: Padding( padding:  EdgeInsets.only(left: sizeWidth/30),
+    child: Column( crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-    Text('Good Morning!',  style: theme.textTheme.headlineMedium,),
-    displayName,
-    SizedBox( height: sizeHeight/70),
-    
-    Padding( padding: const EdgeInsets.all(10),
-   
-    child: SizedBox( height: 45,
-child: TextField( 
-decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none), 
+    Row(
+    children: [ 
+    Column( crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Good Morning!',  style: theme.textTheme.headlineMedium,),
+        displayName,
+      ],
+      ),
+      Spacer(),
+      IconButton( icon: Icon(Icons.notifications_none, size: 30), onPressed: (){}),
+      ]),
+      
+      SizedBox( height: sizeHeight/70),
+        
+      Padding( padding: const EdgeInsets.all(10),
+       
+      child: SizedBox( height: 45,
+      child: TextField( 
+      decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none), 
       filled: true, fillColor: theme.colorScheme.surfaceContainer, prefixIcon: Icon(Icons.search, size: 30),
-       contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 16), hintText: 'Search' , hintStyle: theme.textTheme.headlineMedium), 
+      contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 16), hintText: 'Search' , hintStyle: theme.textTheme.headlineMedium), 
+          ),
+        ),
+        ) ,
+        
+        
+        Padding( padding:  EdgeInsets.only(bottom: sizeHeight/70, left: sizeHeight/70,  top:  sizeHeight/70),
+        child: Text('Popular Workouts', style: theme.textTheme.titleMedium,),
+        ),
+      
+        bodyParts,
+        
+        Padding(
+        padding: EdgeInsets.only(bottom: sizeHeight/70, left: sizeHeight/70, top:  sizeHeight/70),
+          child: Text('Today\'s Plan', style: theme.textTheme.titleMedium),
+        ),
+         
+        todayPlanContainer(sizeWidth, sizeHeight, theme,'Today\'s Plan', '100 Push up a day', 'Intermediate', (){}),
+        SizedBox( height: 15),
+        todayPlanContainer(sizeWidth, sizeHeight, theme,'Today\'s Plan', '100 Push up a day', 'Intermediate', (){}),
+          SizedBox( height: 15),
+        todayPlanContainer(sizeWidth, sizeHeight, theme,'Today\'s Plan', '100 Push up a day', 'Intermediate', (){}),
+        ],
+        ),
+        ),
       ),
     ),
-    ) ,
-    
-    
-    Padding( padding:  EdgeInsets.only(bottom: sizeHeight/70, left: sizeHeight/70,  top:  sizeHeight/70),
-    child: Text('Popular Workouts', style: theme.textTheme.titleMedium,),
-    ),
-
-    bodyParts,
-    
-    Padding(
-    padding: EdgeInsets.only(bottom: sizeHeight/70, left: sizeHeight/70, top:  sizeHeight/70),
-      child: Text('Today\'s Plan', style: theme.textTheme.titleMedium),
-    ),
-     
-    todayPlanContainer(sizeWidth, sizeHeight, theme,'Today\'s Plan', '100 Push up a day', 'Intermediate', (){}),
-    SizedBox( height: 15),
-    todayPlanContainer(sizeWidth, sizeHeight, theme,'Today\'s Plan', '100 Push up a day', 'Intermediate', (){}),
-      SizedBox( height: 15),
-    todayPlanContainer(sizeWidth, sizeHeight, theme,'Today\'s Plan', '100 Push up a day', 'Intermediate', (){}),
-    ],
-    ),
-    ),
-    ),
-  ),
+   Positioned( bottom: sizeHeight/9, right: sizeWidth/20,
+    child: FloatingactionbuttonWidget())
+  ]),
   ),
 );
 }
 
-Widget todayPlanContainer(double sizeWidth, double sizeHeight, ThemeData theme, String title, String subtitle, String workoutLevel, VoidCallback navigate) {
+Widget todayPlanContainer(double sizeWidth, double sizeHeight, ThemeData theme, String title, String subtitle, String workoutLevel, VoidCallback navigate, ) {
 return GestureDetector(onTap: navigate,
   child: Stack(
     children: [ Container( width: sizeWidth/1.05, height: sizeHeight/8,
@@ -152,19 +166,19 @@ Positioned( right: 20,
 );
   }
 
-Widget popularWorkoutsContainer(double sizeHeight, double sizeWidth, ThemeData theme, String text) {
+Widget popularWorkoutsContainer(double sizeHeight, double sizeWidth, ThemeData theme, String text, String bodyPartImage) {
     return Stack(
 children: [ 
 Padding( padding: EdgeInsets.only(right: sizeWidth/30),
   child: Container( height: sizeHeight/4, width: sizeWidth/1.2, 
   decoration: BoxDecoration(
-  image: DecorationImage(image: AssetImage('assets/images/sportywoman.png'), fit: BoxFit.cover),
+  image: DecorationImage(image: AssetImage(bodyPartImage), fit: BoxFit.cover),
   borderRadius: BorderRadius.all(Radius.elliptical(20, 20)), color: lilacPurple),
   ),
 ),
 Positioned.fill( right: sizeWidth/6,
 child: Container( 
-decoration: BoxDecoration(gradient: LinearGradient(colors: [Colors.black, Colors.black.withOpacity(0.0)]),
+decoration: BoxDecoration(gradient: LinearGradient(colors: [Colors.black, Colors.black.withValues(alpha: 0.0)]),
  borderRadius: BorderRadius.all(Radius.elliptical(20, 20)),   ),
 ),
 ),
@@ -194,7 +208,7 @@ Icon(Icons.play_circle_fill, color: theme.primaryColor, size: 60)
 
   Container labelContainer(double sizeHeight, double sizeWidth, IconData icon, String cal, double size) {
     return Container(height: sizeHeight/25, width: size, decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.elliptical(15, 15)),
-color: Colors.white.withOpacity(0.8),),
+color: Colors.white.withValues( alpha: 0.8),),
 child: Row( mainAxisAlignment: MainAxisAlignment.center,
 children: [
 Padding(

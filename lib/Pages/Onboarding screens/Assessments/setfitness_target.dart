@@ -64,7 +64,6 @@ selectedIndex = index;
 elevatedButton(sizeWidth, sizeHeight, (){
 final fitnessTarget = tileAssets[selectedIndex!]['Target'];
 ref.read(userInfoProvider.notifier).setFitnessTarget(fitnessTarget);
-print(fitnessTarget);
 Navigator.push(context, PageRouteBuilder(
 pageBuilder: (context, animation, secondaryAnimation) => Setgender(),
 transitionsBuilder: (context, animation, secondaryAnimation, child) {

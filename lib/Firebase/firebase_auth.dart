@@ -33,7 +33,6 @@ if (  phoneNumber != null && queryPhoneSnapshot.docs.isNotEmpty && context.mount
 showSnackbar(context, 'Your phone number is already linked to another account');
 }
 else if(phoneNumber == null){
-print('No Phone Number Found');
 return;
 }
 
