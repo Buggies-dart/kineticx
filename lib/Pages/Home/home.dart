@@ -5,6 +5,7 @@ import 'package:kineticx/Pages/Home/Widgets/floatingactionbutton.dart';
 import 'package:kineticx/Pages/Home/controllers/homecontroller.dart';
 import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/components.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
@@ -49,7 +50,22 @@ return SizedBox( height: sizeHeight/3.8,
   return popularWorkoutsContainer(sizeHeight, sizeWidth, theme, part['bodyPart'], part['image']);
   }),
 );
-}, error: (err, stack) => Center(child: Text('Error: $err'),), loading: () => const Center(child: CircularProgressIndicator()));
+}, error: (err, stack) => Center(child: Text('Error: $err'),), loading: () => Shimmer.fromColors( baseColor: Colors.grey[300]!, highlightColor: Colors.grey[100]!,
+  child: SingleChildScrollView( scrollDirection: Axis.horizontal,
+child: Row(
+children: [ 
+Container( height: sizeHeight/4, width: sizeWidth/1.2, 
+decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.elliptical(20, 20)),
+color: Colors.red),
+),
+SizedBox( width: sizeWidth/30),
+Container( height: sizeHeight/4, width: sizeWidth/1.2, 
+decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.elliptical(20, 20)),
+ color: Colors.red),
+      ),
+    ]),
+  ),
+));
 
 
 
@@ -207,7 +223,7 @@ Icon(Icons.play_circle_fill, color: theme.primaryColor, size: 60)
   }
 
   Container labelContainer(double sizeHeight, double sizeWidth, IconData icon, String cal, double size) {
-    return Container(height: sizeHeight/25, width: size, decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.elliptical(15, 15)),
+return Container(height: sizeHeight/25, width: size, decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.elliptical(15, 15)),
 color: Colors.white.withValues( alpha: 0.8),),
 child: Row( mainAxisAlignment: MainAxisAlignment.center,
 children: [

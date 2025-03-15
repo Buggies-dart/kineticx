@@ -33,9 +33,7 @@ final sizeHeight = MediaQuery.of(context).size.height;
 final sizeWidth = MediaQuery.of(context).size.width;
 final theme = Theme.of(context);
 return  Scaffold( backgroundColor: whiteColor,
-body: isloading? Center(child: CircularProgressIndicator()) :
-
-SingleChildScrollView( scrollDirection: Axis.vertical,
+body: SingleChildScrollView( scrollDirection: Axis.vertical,
   
 child: Column( crossAxisAlignment: CrossAxisAlignment.center,
   children: [
@@ -43,7 +41,7 @@ child: Column( crossAxisAlignment: CrossAxisAlignment.center,
     children: [
    
   Container( height: sizeHeight/3,
-    decoration: BoxDecoration(
+decoration: BoxDecoration(
     image: DecorationImage(image: AssetImage('assets/images/chestpress.png'), fit: BoxFit.cover)
     ),
     ),
@@ -89,7 +87,7 @@ child: Column( crossAxisAlignment: CrossAxisAlignment.center,
   
   SizedBox( height: sizeHeight/50),
   
-  elevatedButton(sizeWidth, sizeHeight, signinWithEmailandPassword, 'Sign In'),
+  elevatedButton(sizeWidth, sizeHeight, signinWithEmailandPassword,  isloading == true? 'Signing in...' : 'Sign In'),
   
   Padding(
     padding:  EdgeInsets.only(top: 8, left: sizeWidth/4),
@@ -144,9 +142,14 @@ child: Icon(icon),
 );
   }
 
-void signinWithEmailandPassword(){
-isloading;
-FirebaseAuthMethods(FirebaseAuth.instance, context).userSignin(mail: controllerMail.text, password: controllerPass.text);
-isloading = false;
+void signinWithEmailandPassword() async{
+setState(() {
+  isloading = true;
+});
+await FirebaseAuthMethods(FirebaseAuth.instance, context).userSignin(mail: controllerMail.text, password: controllerPass.text);
+setState(() {
+  isloading = false;
+});
+
 }
 }

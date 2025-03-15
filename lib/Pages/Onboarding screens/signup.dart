@@ -16,7 +16,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
- bool isLoading = true;
+ bool isLoading = false;
  bool obscureText = true;
 final TextEditingController controllerName = TextEditingController();
 final TextEditingController controllerMail = TextEditingController();
@@ -101,7 +101,7 @@ TextfieldWidget(text: 'Confirm Password', hintIcon: Icons.lock_outline, controll
 SizedBox( height: sizeHeight/80),
   
 
-elevatedButton(sizeWidth, sizeHeight, signUp, 'Sign Up' ),
+elevatedButton(sizeWidth, sizeHeight, signUp, isLoading == true? 'Signing in...' :'Sign Up' ),
   
  Padding(
     padding:  EdgeInsets.only(left: sizeWidth/4),
@@ -123,9 +123,9 @@ moveToNextScreen(context, Login());
 // Email Sign Up
 void signUp () async{
 if (controllerPass.text == confirmPassController.text) {
-
-FirebaseAuthMethods(FirebaseAuth.instance, context).signUpWithEmail(username: controllerName.text, email: controllerMail.text, phoneNumber: phoneNumber!.phoneNumber ?? '', password: controllerPass.text);
-
+isLoading = true;
+await FirebaseAuthMethods(FirebaseAuth.instance, context).signUpWithEmail(username: controllerName.text, email: controllerMail.text, phoneNumber: phoneNumber!.phoneNumber ?? '', password: controllerPass.text);
+isLoading = false;
  } else {
 showtextSnackbar(context, 'Your Passwords does not match.');
   }
