@@ -123,9 +123,13 @@ moveToNextScreen(context, Login());
 // Email Sign Up
 void signUp () async{
 if (controllerPass.text == confirmPassController.text) {
-isLoading = true;
+setState(() {
+  isLoading = true;
+});
 await FirebaseAuthMethods(FirebaseAuth.instance, context).signUpWithEmail(username: controllerName.text, email: controllerMail.text, phoneNumber: phoneNumber!.phoneNumber ?? '', password: controllerPass.text);
+setState(() {
 isLoading = false;
+});
  } else {
 showtextSnackbar(context, 'Your Passwords does not match.');
   }

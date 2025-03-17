@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kineticx/Pages/Home/Widgets/floatingactionbutton.dart';
 import 'package:kineticx/Pages/Home/controllers/homecontroller.dart';
 import 'package:kineticx/Utils/pngs.dart';
+import 'package:kineticx/Widgets/shimmers.dart';
 import 'package:kineticx/components.dart';
-import 'package:shimmer/shimmer.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
@@ -36,9 +36,13 @@ final sizeWidth = MediaQuery.of(context).size.width;
 final userNameAsyncValue = ref.watch(HomeController.userName);
 final displayName =  userNameAsyncValue.when(data: (username){
 if (username != null) {
-return Text(username, style: theme.textTheme.displayLarge) ; } else { return const Text('');
+return Column( crossAxisAlignment: CrossAxisAlignment.start,
+children: [ Text(getGreeting(),  style: theme.textTheme.headlineMedium,),
+Text(username, style: theme.textTheme.displayLarge),
+  ],
+) ; } else { return const Text('');
 }
-}, error:(error, _) => Text('Error: $error'),  loading: ()=> const Text('')
+}, error:(error, _) => Text('Error: $error'),  loading: ()=>  usernameLoading(sizeHeight, sizeWidth)
 );
 
 final bodyPartListAsyncValue = ref.watch(HomeController.bodyPartList);
@@ -50,22 +54,7 @@ return SizedBox( height: sizeHeight/3.8,
   return popularWorkoutsContainer(sizeHeight, sizeWidth, theme, part['bodyPart'], part['image']);
   }),
 );
-}, error: (err, stack) => Center(child: Text('Error: $err'),), loading: () => Shimmer.fromColors( baseColor: Colors.grey[300]!, highlightColor: Colors.grey[100]!,
-  child: SingleChildScrollView( scrollDirection: Axis.horizontal,
-child: Row(
-children: [ 
-Container( height: sizeHeight/4, width: sizeWidth/1.2, 
-decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.elliptical(20, 20)),
-color: Colors.red),
-),
-SizedBox( width: sizeWidth/30),
-Container( height: sizeHeight/4, width: sizeWidth/1.2, 
-decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.elliptical(20, 20)),
- color: Colors.red),
-      ),
-    ]),
-  ),
-));
+}, error: (err, stack) => Center(child: Text('Error: $err'),), loading: () => bodypartLoading(sizeHeight, sizeWidth));
 
 
 
@@ -91,13 +80,10 @@ return  WillPopScope( onWillPop: () async {
     children: [
     Row(
     children: [ 
-    Column( crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Good Morning!',  style: theme.textTheme.headlineMedium,),
-        displayName,
-      ],
-      ),
-      Spacer(),
+    displayName,
+      
+     Spacer(),
+      
       IconButton( icon: Icon(Icons.notifications_none, size: 30), onPressed: (){}),
       ]),
       
@@ -142,6 +128,25 @@ return  WillPopScope( onWillPop: () async {
   ),
 );
 }
+
+SingleChildScrollView bodypartLoading(double sizeHeight, double sizeWidth) {
+    return SingleChildScrollView( scrollDirection: Axis.horizontal,
+child: Row(
+children: [ ShimmerWidget(sizeHeight: sizeHeight/4, sizeWidth: sizeWidth/1.2),
+SizedBox(width: 12),
+ShimmerWidget(sizeHeight: sizeHeight/4, sizeWidth: sizeWidth/1.2),]
+),
+);
+  }
+
+Column usernameLoading(double sizeHeight, double sizeWidth) {
+    return Column( crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+ShimmerWidget(sizeHeight: sizeHeight/35, sizeWidth: sizeWidth/4),
+SizedBox(height: 2),
+ShimmerWidget(sizeHeight: sizeHeight/35, sizeWidth: sizeWidth/4)
+],);
+  }
 
 Widget todayPlanContainer(double sizeWidth, double sizeHeight, ThemeData theme, String title, String subtitle, String workoutLevel, VoidCallback navigate, ) {
 return GestureDetector(onTap: navigate,
@@ -222,7 +227,7 @@ Icon(Icons.play_circle_fill, color: theme.primaryColor, size: 60)
 );
   }
 
-  Container labelContainer(double sizeHeight, double sizeWidth, IconData icon, String cal, double size) {
+Container labelContainer(double sizeHeight, double sizeWidth, IconData icon, String cal, double size) {
 return Container(height: sizeHeight/25, width: size, decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.elliptical(15, 15)),
 color: Colors.white.withValues( alpha: 0.8),),
 child: Row( mainAxisAlignment: MainAxisAlignment.center,
@@ -244,4 +249,18 @@ void showToast(String message) {
     ),
   );
 }
+
+String getGreeting() {
+  int hour = DateTime.now().hour;
+  
+  if (hour >= 5 && hour < 12) {
+    return "Good Morning 🌞";
+  } else if (hour >= 12 && hour < 17) {
+    return "Good Afternoon ☀️";
+  } else {
+    return "Good Evening 🌙";
+  }
 }
+}
+
+

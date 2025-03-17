@@ -29,7 +29,7 @@ debugShowCheckedModeBanner: false,
 title: 'Kineticx Fitness',
 theme: Pallete.lightTheme,
 themeMode: ThemeMode.light,
-home: WelcomeScreen(),
+home: NavigationPage(),
 );
   }
 }
