@@ -1,0 +1,55 @@
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kineticx/Features/Step%20Counter/controllers/counter_controller.dart';
+import 'package:kineticx/Navigation/navigation.dart';
+import 'package:kineticx/Pages/Analytics/controllers/analytic_controller.dart';
+import 'package:kineticx/Pages/Onboarding%20screens/Assessments/controllers/assesments.dart';
+import 'package:kineticx/Utils/components.dart';
+import 'package:kineticx/Firebase/firebase_options.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
+  runApp(ProviderScope(child: const MyApp()));
+}
+
+final userInfoProvider = StateNotifierProvider<SaveUserInfo, UserInfo>((ref) {
+return SaveUserInfo();
+});
+
+final stepCountProvider = StateNotifierProvider<StepCounter, int>((ref) {
+return StepCounter();
+});
+
+final analyticsProvider = StateNotifierProvider<AnalyticController, UserAnalytics>((ref){
+return AnalyticController();
+});
+
+final maxStepsProvider = ChangeNotifierProvider<FinalStepCounter>((ref)=> FinalStepCounter());
+
+final stepSessionProvider = StateNotifierProvider<StepSessionNotifier, StepSession>(
+  (ref) => StepSessionNotifier(),
+);
+
+
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+Widget build(BuildContext context) {
+return MaterialApp(
+debugShowCheckedModeBanner: false,
+title: 'Kineticx Fitness',
+theme: Pallete.lightTheme,
+themeMode: ThemeMode.light,
+home: NavigationPage()
+);
+}
+}
+
+
