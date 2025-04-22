@@ -30,6 +30,7 @@ static const String mesh = 'assets/images/mesh.png';
 static const String bpmLogo = 'assets/images/bpm_measure.png';
 static const String footSteps = 'assets/images/footsteps.png';
 static const String done = 'assets/images/done.gif';
+static const caloriesBurned = 'assets/images/kCal.png';
 }
 
 

@@ -9,6 +9,7 @@ import 'package:kineticx/Navigation/navigation.dart';
 import 'package:kineticx/Pages/Home/Widgets/features_widget.dart';
 import 'package:kineticx/Pages/Home/Widgets/heart_rate_data_widget.dart';
 import 'package:kineticx/Pages/Home/Widgets/floatingactionbutton.dart';
+import 'package:kineticx/Pages/Home/Widgets/stepcount_widget.dart';
 import 'package:kineticx/Pages/Home/controllers/homecontroller.dart';
 import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/Widgets/shimmers.dart';
@@ -66,7 +67,12 @@ return SizedBox( height: sizeHeight/3.8,
 }, error: (err, stack) => Center(child: Text('Error: $err'),), loading: () => bodypartLoading(sizeHeight, sizeWidth));
 
 
+final stepCounts = ref.watch(stepCountProvider);
+final maxStepCounts = ref.watch(maxStepsProvider).totalSteps;
+final caloriesBurned = stepCounts * 0.04;
 
+// Metrics Calculation
+final distance = stepCounts * 0.0008;
 
 return  WillPopScope( onWillPop: () async {
  final now = DateTime.now();
@@ -145,14 +151,17 @@ FeaturesWidget(icon: FontAwesomeIcons.glassWater, title: 'Track Water Intake', s
 
 
 SizedBox( height: sizeHeight/40),
-
+stepCounts == 0  ?
 FeaturesWidget(icon: FontAwesomeIcons.personWalking, title: 'Step Counter', subtitle: 'Take 10,000 steps a day to keep fit and healthy', iconColor: lilacPurple, iconBackgroundColor: lilacPurple.withValues(alpha: 0.3),
 elevatedButton: ElevatedButton(onPressed: (){
 ref.read(stepSessionProvider.notifier).startSession();
 moveToNextScreen(context, Stepcounter()); },  style: ElevatedButton.styleFrom( fixedSize: Size(sizeWidth/2.5, 50), backgroundColor: lilacPurple.withValues(alpha: 0.7), shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.elliptical(20, 20)))
 ), 
 child: Text('Let\'s Count', style: theme.textTheme.titleMedium, ),
-)),
+)) :
+
+StepCountWidget(sizeHeight: sizeHeight, sizeWidth: sizeWidth, theme: theme, stepCounts: stepCounts, maxStepCounts: maxStepCounts, distance: distance, caloriesBurned: caloriesBurned,),
+
 SizedBox( height: sizeHeight/40),
 ],
 ),
@@ -300,8 +309,4 @@ String getGreeting() {
   }
 }
 }
-
-
-
-
 

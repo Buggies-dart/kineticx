@@ -50,7 +50,6 @@ final distance = stepCounts * 0.0008;
 final durationInMinutes = sessionNotifier.duration?.inMinutes == 0 ? 0 : sessionNotifier.duration?.inMinutes;
 final speed = distance / (durationInMinutes! / 60);
 
-print(sessionNotifier.duration?.inMinutes);
 return Scaffold(
 body: SafeArea( 
   child: Center(
