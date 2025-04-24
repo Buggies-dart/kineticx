@@ -111,7 +111,9 @@ challengeContainer(sizeHeight, sizeWidth, theme, '8 Cups of\n Water Daily', text
 
 SizedBox(width: sizeWidth/30),
 
-challengeContainer(sizeHeight, sizeWidth, theme, 'Sprint\nChallenge', theme.colorScheme.surfaceContainer, Images.sprint, textColorBlack, (){}),
+challengeContainer(sizeHeight, sizeWidth, theme, 'Sprint\nChallenge', theme.colorScheme.surfaceContainer, Images.sprint, textColorBlack, (){
+showComingSoonDialog(context);
+}),
   ],
   ),
 ),
@@ -197,4 +199,62 @@ return SizedBox( height: 40,
   backgroundColor: theme.colorScheme.tertiaryContainer, label: Text(text, style: theme.textTheme.labelSmall,)),
 );
   }
+
+void showComingSoonDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      backgroundColor: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.hourglass_empty_rounded, size: 48, color: Theme.of(context).primaryColor),
+            const SizedBox(height: 16),
+            Text(
+              'Coming Soon',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'This feature is currently under development. Stay tuned for updates!',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black54,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                child: Text(
+                  'Okay',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 }
