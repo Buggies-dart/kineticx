@@ -39,11 +39,20 @@ final stepSessionProvider = StateNotifierProvider<StepSessionNotifier, StepSessi
 
 
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
 
+class _MyAppState extends ConsumerState<MyApp> {
 
+// @override
+//   void initState() {
+// super.initState();
+// checkAndResetDailyMetrics(ref);
+//   }
   @override
 Widget build(BuildContext context) {
 return MaterialApp(

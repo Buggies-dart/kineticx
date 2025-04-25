@@ -54,7 +54,7 @@ class _HeartAnimationScreenState extends State<HeartAnimationScreen> with Single
                     scale: _scaleAnimation.value,
                     child: Icon(
                       Icons.favorite,
-                      color: Colors.red.withOpacity(0.8),
+                      color: Colors.red.withValues( alpha: 0.8),
                       size: 180, // Bigger for the glow
                     ),
                   ),

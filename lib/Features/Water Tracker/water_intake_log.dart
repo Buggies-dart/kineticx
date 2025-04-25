@@ -227,7 +227,7 @@ class WaterDropPainter extends CustomPainter {
 
     // Paint for the highlight
     Paint highlightPaint = Paint()
-      ..color = Colors.white.withOpacity(0.5)
+      ..color = Colors.white.withValues(alpha: 0.5)
       ..style = PaintingStyle.fill;
 
     // Path for the highlight

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kineticx/Widgets/widgets.dart';
 import 'package:kineticx/Utils/components.dart';
 
@@ -48,7 +49,7 @@ resetPasswordOptions(sizeHeight, sizeWidth, theme, 'Send via 2FA', 'Seamlessly r
 Icons.lock, theme.primaryColor),
 SizedBox( height: sizeHeight/80),
 resetPasswordOptions(sizeHeight, sizeWidth, theme, 'Send via Google Auth', 'Seamlessly reset your\npassword via gAuth',
-MdiIcons.googleCloud, lilacPurple),
+FontAwesomeIcons.cloud, lilacPurple),
 ],
 ),
 

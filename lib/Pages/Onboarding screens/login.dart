@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kineticx/Firebase/firebase_auth.dart';
 import 'package:kineticx/Firebase/firebase_widgets.dart';
 import 'package:kineticx/Navigation/navigation.dart';
@@ -98,11 +99,11 @@ decoration: BoxDecoration(
     padding:  EdgeInsets.only(top: 8, left: sizeWidth/4),
     child: Row(
     children: [
-    socialLogin(sizeHeight, sizeWidth, MdiIcons.gmail, (){
+    socialLogin(sizeHeight, sizeWidth, FontAwesomeIcons.google, (){
 FirebaseAuthMethods(FirebaseAuth.instance, context).signinWithGoogle();
     }),
     SizedBox( width: 12),
-    socialLogin(sizeHeight, sizeWidth, MdiIcons.facebook, (){}),
+    socialLogin(sizeHeight, sizeWidth, FontAwesomeIcons.facebook, (){}),
     SizedBox( width: 12),
     socialLogin(sizeHeight, sizeWidth, MdiIcons.phone, (){
 showdialogBox(context: context, codeController: controllerPhone, onPressed: (){

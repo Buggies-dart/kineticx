@@ -1,9 +1,3 @@
-
-import 'dart:convert';
-
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 class UserAnalytics{
 final int cupsOfWater;
 final int caloriesBurned;
