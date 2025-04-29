@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as ref;
 import 'package:intl/intl.dart';
 import 'package:kineticx/Models/daily_health_data.dart';
+import 'package:kineticx/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -48,14 +49,15 @@ final prefs = await SharedPreferences.getInstance();
 prefs.setInt('currentBpm', state.bpm);
 }
 
-}
 
 void checkAndResetDailyMetrics(WidgetRef ref) async {
   final prefs = await SharedPreferences.getInstance();
   final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
   final lastSavedDate = prefs.getString('lastUpdatedDate');
 
-  if (lastSavedDate != today) {
+print('lastSavedDate: $lastSavedDate');
+
+  if (lastSavedDate == today) {
     // Convert saved step data to List<int>
     final stringStepList = prefs.getStringList('currentHeartRateData') ?? [];
     final stepList = stringStepList.map((e) => int.tryParse(e) ?? 0).toList();
@@ -68,14 +70,48 @@ void checkAndResetDailyMetrics(WidgetRef ref) async {
       sleepData: [],
       bpm: prefs.getInt('currentBpm') ?? 0,
     );
-
-    // Optionally: Save userAnalytics data somewhere or process it
-
-    // Reset today's metrics
-    await prefs.setInt('currentCupsOfWater', 0);
-    await prefs.setInt('currentCaloriesBurned', 0);
-    await prefs.setStringList('currentSteps', []);
-    await prefs.setInt('currentBpm', 0);
-    await prefs.setString('lastUpdatedDate', today);
+    state = userAnalytics;
   }
+else if (lastSavedDate != today) {
+ref.read(analyticsProvider.notifier).resetMetrics();
+
+  }
+}
+
+Future<void> saveCurrentMetricsToHistory(SharedPreferences prefs) async {
+  // Read the current metrics
+  final currentCups = prefs.getInt('cupsOfWater') ?? 0;
+  final currentCalories = prefs.getInt('caloriesBurned') ?? 0;
+  final heartRatesString = prefs.getStringList('heartRateData') ?? [];
+  final heartRates = heartRatesString.map((e) => int.parse(e)).toList();
+  final currentBpm = prefs.getInt('bpm') ?? 0;
+
+  // Create a string or JSON representing this day's data
+  final historyEntry = {
+    'date': DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 1))),
+    'cupsOfWater': currentCups,
+    'caloriesBurned': currentCalories,
+    'heartRateData': heartRates,
+    'bpm': currentBpm,
+  };
+
+ // Load previous history
+List<String> history = prefs.getStringList('metricsHistory') ?? [];
+
+  // Add new day to history
+history.add(historyEntry.toString()); 
+
+  // Save updated history
+await prefs.setStringList('metricsHistory', history);
+}  
+
+void resetMetrics() {
+  state = UserAnalytics(
+  cupsOfWater: 0,
+  caloriesBurned: 0,
+  heartRateData: [],
+  sleepData: [],
+  bpm: 0,
+  );
+}
 }

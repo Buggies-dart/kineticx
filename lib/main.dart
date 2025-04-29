@@ -48,11 +48,11 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
 
-// @override
-//   void initState() {
-// super.initState();
-// checkAndResetDailyMetrics(ref);
-//   }
+@override
+  void initState() {
+super.initState();
+ref.read(analyticsProvider.notifier).checkAndResetDailyMetrics(ref);
+  }
   @override
 Widget build(BuildContext context) {
 return MaterialApp(

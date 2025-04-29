@@ -48,14 +48,14 @@ class StepCountWidget extends StatelessWidget {
           child: ListTile(
             leading: Icon(FontAwesomeIcons.personWalking, color: theme.primaryColor, size: 22 ),
             title: Text('Distance', style: theme.textTheme.bodySmall),
-            trailing: Text('$distance km', style: theme.textTheme.bodySmall),
+            trailing: Text('${distance.toStringAsFixed(2)} km', style: theme.textTheme.bodySmall),
             ),
         ),
         SizedBox( height: 30,
           child: ListTile(
             leading: Image.asset('assets/images/kCal.png', color: theme.primaryColor, height: 20, width: 20),
             title: Text('Calories (kcal)', style: theme.textTheme.bodySmall),
-            trailing: Text('$caloriesBurned km', style: theme.textTheme.bodySmall),
+            trailing: Text('${caloriesBurned.toStringAsFixed(2)} km', style: theme.textTheme.bodySmall),
             ),
         ),
        
