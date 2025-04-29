@@ -6,7 +6,6 @@ import 'package:kineticx/Features/Step%20Counter/counter.dart';
 import 'package:kineticx/Features/Water%20Tracker/water_intake_log.dart';
 import 'package:kineticx/Helper/target_body_parts_filter.dart';
 import 'package:kineticx/Navigation/navigation.dart';
-import 'package:kineticx/Pages/Analytics/controllers/analytic_controller.dart';
 import 'package:kineticx/Pages/Home/Widgets/features_widget.dart';
 import 'package:kineticx/Pages/Home/Widgets/heart_rate_data_widget.dart';
 import 'package:kineticx/Pages/Home/Widgets/floatingactionbutton.dart';
