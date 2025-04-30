@@ -31,6 +31,7 @@ static const String bpmLogo = 'assets/images/bpm_measure.png';
 static const String footSteps = 'assets/images/footsteps.png';
 static const String done = 'assets/images/done.gif';
 static const caloriesBurned = 'assets/images/kCal.png';
+static const String cupofWater = 'assets/images/cupofwater.png';
 }
 
 

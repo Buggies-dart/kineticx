@@ -6,6 +6,7 @@ import 'package:kineticx/Pages/Analytics/widgets/calendar.dart';
 import 'package:kineticx/Pages/Analytics/widgets/heart_rate_equalizer.dart';
 import 'package:kineticx/Pages/Analytics/widgets/sleep_data.dart';
 import 'package:kineticx/Pages/Analytics/widgets/water_tracker.dart';
+import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/main.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -19,7 +20,6 @@ class AnalyticsPage extends StatefulWidget {
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
  List<double> sleepData = [2, 5, 3, 8, 6, 4, 7, 9, 3, 5, 8];
- List<int> heartRateData = [70, 75, 80, 85, 90, 95, 100, 105, 110, 115];
   CalendarFormat format = CalendarFormat.week;
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
@@ -46,8 +46,7 @@ timer?.cancel();
   }
 
   @override
-  Widget build(BuildContext context) {
-  
+  Widget build(BuildContext context) { 
 bool isToday = selectedDay.year == currentDate.year &&
 selectedDay.month == currentDate.month && selectedDay.day == currentDate.day;
 final sizeHeight = MediaQuery.of(context).size.height;
@@ -186,7 +185,13 @@ child: Column(
 children: [
 activityTitle(theme, Images.waterDrop, 'Water'),
 SizedBox( height: sizeHeight/70),
-WaterTracker()
+
+WaterTracker( boxDecoration: BoxDecoration( color: whiteColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
+  ),
+sizeWidth: sizeWidth/2.5, sizeHeight: sizeHeight/11, text:   Consumer( builder: (context, ref, child) {
+ final cupsOfWaterDataRef = ref.watch(analyticsProvider).cupsOfWater;
+return Text(' ${(cupsOfWaterDataRef / 125).toInt()}/8 Cups', style: theme.textTheme.bodySmall!.copyWith( fontWeight: FontWeight.bold));
+}))
 ],
 ),
 ),

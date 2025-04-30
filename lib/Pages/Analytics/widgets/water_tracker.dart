@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/main.dart';
 import 'package:water_animation/water_animation.dart';
 
 class WaterTracker extends ConsumerStatefulWidget {
-  const WaterTracker({super.key});
-
+  const WaterTracker({super.key, required this.boxDecoration, required this.sizeHeight, required this.sizeWidth, this.text});
+final Decoration boxDecoration; final double sizeHeight; final double sizeWidth; final Widget? text;
   @override
   ConsumerState<WaterTracker> createState() => _WaterTrackerState();
 }
@@ -16,10 +15,6 @@ class _WaterTrackerState extends ConsumerState<WaterTracker> {
   @override
   Widget build(BuildContext context) {
 final cupsOfWaterDataRef = ref.watch(analyticsProvider).cupsOfWater;
-final theme = Theme.of(context);
-final sizeHeight = MediaQuery.of(context).size.height;
-final sizeWidth = MediaQuery.of(context).size.width;
-
 
 return Column( mainAxisAlignment: MainAxisAlignment.center,
   children: [
@@ -28,8 +23,8 @@ return Column( mainAxisAlignment: MainAxisAlignment.center,
   children: [
   
   WaterAnimation(
-  width: sizeWidth/2.5,
-  height: sizeHeight/11,
+  width: widget.sizeWidth,
+  height: widget.sizeHeight,
   waterFillFraction: cupsOfWaterDataRef.toDouble() / 1000,
   fillTransitionDuration: Duration(seconds: 1),
   fillTransitionCurve: Curves.easeInOut,
@@ -41,14 +36,9 @@ return Column( mainAxisAlignment: MainAxisAlignment.center,
   enableRipple: true,
   enableShader: false,
   realisticWave: true,
-  decoration: BoxDecoration(
-  color: whiteColor,
-  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
-  ),
+  decoration: widget.boxDecoration,
    ),
-  
-  Text(' ${(cupsOfWaterDataRef / 125).toInt()}/8 Cups', style: theme.textTheme.bodySmall!.copyWith( fontWeight: FontWeight.bold))
-  
+    
   ]
   )
   ],

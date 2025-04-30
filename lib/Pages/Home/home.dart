@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:kineticx/Features/Step%20Counter/counter.dart';
 import 'package:kineticx/Features/Water%20Tracker/water_intake_log.dart';
 import 'package:kineticx/Helper/target_body_parts_filter.dart';
 import 'package:kineticx/Navigation/navigation.dart';
+import 'package:kineticx/Pages/Analytics/widgets/water_tracker.dart';
 import 'package:kineticx/Pages/Home/Widgets/features_widget.dart';
 import 'package:kineticx/Pages/Home/Widgets/heart_rate_data_widget.dart';
 import 'package:kineticx/Pages/Home/Widgets/floatingactionbutton.dart';
@@ -70,9 +72,15 @@ return SizedBox( height: sizeHeight/3.8,
 final stepCounts = ref.watch(stepCountProvider);
 final maxStepCounts = ref.watch(maxStepsProvider).totalSteps;
 final caloriesBurned = stepCounts * 0.04;
+final waterIntake = ref.watch(analyticsProvider).cupsOfWater;
+
 
 // Metrics Calculation
 final distance = stepCounts * 0.0008;
+
+// Time
+String currentTime = DateFormat('hh:mm a').format(DateTime.now());
+
 
 return  WillPopScope( onWillPop: () async {
  final now = DateTime.now();
@@ -86,6 +94,8 @@ return  WillPopScope( onWillPop: () async {
    return true;
  } 
 },
+
+
   child: Scaffold(
   body: Stack(
 children: [ SingleChildScrollView( scrollDirection: Axis.vertical,
@@ -139,6 +149,8 @@ HeartRateDataWidget(),
 
 SizedBox( height: sizeHeight/40),
 
+waterIntake == 0 ?
+
 FeaturesWidget(icon: FontAwesomeIcons.glassWater, title: 'Track Water Intake', subtitle: 'Track your water intake and stay hydrated always', iconColor: theme.primaryColor, iconBackgroundColor: theme.primaryColor.withValues(alpha: 0.3),
   elevatedButton: ElevatedButton(onPressed: (){
 
@@ -147,10 +159,20 @@ FeaturesWidget(icon: FontAwesomeIcons.glassWater, title: 'Track Water Intake', s
   ), 
   child: Text('Drink', style: theme.textTheme.titleMedium, ),
   )
-  ),
-
+  ):
+ 
+ Stack(
+children: [
+WaterTracker(boxDecoration: BoxDecoration(
+color: whiteColor, borderRadius: BorderRadius.all(Radius.elliptical(15, 15))
+), sizeHeight: sizeHeight/4, sizeWidth: sizeWidth),
+waterCount(sizeWidth, theme, sizeHeight, currentTime, context)
+],
+ )
+  ,
 
 SizedBox( height: sizeHeight/40),
+
 stepCounts == 0  ?
 FeaturesWidget(icon: FontAwesomeIcons.personWalking, title: 'Step Counter', subtitle: 'Take 10,000 steps a day to keep fit and healthy', iconColor: lilacPurple, iconBackgroundColor: lilacPurple.withValues(alpha: 0.3),
 elevatedButton: ElevatedButton(onPressed: (){
@@ -175,6 +197,28 @@ child: FloatingactionbuttonWidget())
   ),
 );
 }
+
+Padding waterCount(double sizeWidth, ThemeData theme, double sizeHeight, String currentTime, BuildContext context) {
+return Padding( padding: EdgeInsets.only(left: sizeWidth/20, ),
+child: Row(children: [
+Column( crossAxisAlignment: CrossAxisAlignment.start,
+  children: [ 
+Text( currentTime, style: theme.textTheme.headlineMedium!.copyWith(fontSize: sizeHeight/45, fontWeight: FontWeight.w900),),
+Text('2 cups of water', style: theme.textTheme.headlineMedium!.copyWith(color: steelGray),),
+SizedBox( height: sizeHeight/20),
+ElevatedButton(onPressed: (){
+moveToNextScreen(context, WaterIntakeLog()); 
+  },  style: ElevatedButton.styleFrom( fixedSize: Size(sizeWidth/3, 30), backgroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.elliptical(20, 20)))
+  ), 
+  child: Text('Drink', style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 15, fontWeight: FontWeight.normal), ),
+  )
+  ],
+),
+SizedBox( width: sizeWidth/7),
+Container( width: sizeWidth/2.5, height: sizeHeight/4, color: null, child: Image.asset(Images.cupofWater),)
+],),
+);
+  }
 
 SingleChildScrollView bodypartLoading(double sizeHeight, double sizeWidth) {
     return SingleChildScrollView( scrollDirection: Axis.horizontal,
