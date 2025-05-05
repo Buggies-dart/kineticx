@@ -17,6 +17,7 @@ import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/Widgets/shimmers.dart';
 import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
@@ -31,12 +32,21 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     super.initState();
 ref.read(HomeController.userName);
   getbodyPartFilter();
+printHistory();
   }
-
 DateTime? _lastPressedAt;
 
+Future<void> printHistory() async {
+  final prefs = await SharedPreferences.getInstance();
+final history = prefs.getStringList('metricsHistory') ?? [];
+  
+for (var entry in history) {
+  print('🕓 Historical Entry: $entry');
+  }
+}
   @override
   Widget build(BuildContext context) {
+
 // Theme
 final theme = Theme.of(context);
 
@@ -72,8 +82,7 @@ return SizedBox( height: sizeHeight/3.8,
 final stepCounts = ref.watch(stepCountProvider);
 final maxStepCounts = ref.watch(maxStepsProvider).totalSteps;
 final caloriesBurned = stepCounts * 0.04;
-final waterIntake = ref.watch(analyticsProvider).cupsOfWater;
-
+final waterIntake = ref.watch(analyticsProvider).cupsOfWater / 125;
 
 // Metrics Calculation
 final distance = stepCounts * 0.0008;
@@ -166,7 +175,7 @@ children: [
 WaterTracker(boxDecoration: BoxDecoration(
 color: whiteColor, borderRadius: BorderRadius.all(Radius.elliptical(15, 15))
 ), sizeHeight: sizeHeight/4, sizeWidth: sizeWidth),
-waterCount(sizeWidth, theme, sizeHeight, currentTime, context)
+waterCount(sizeWidth, theme, sizeHeight, currentTime, context, waterIntake)
 ],
  )
   ,
@@ -198,19 +207,28 @@ child: FloatingactionbuttonWidget())
 );
 }
 
-Padding waterCount(double sizeWidth, ThemeData theme, double sizeHeight, String currentTime, BuildContext context) {
+Padding waterCount(double sizeWidth, ThemeData theme, double sizeHeight, String currentTime, BuildContext context, double waterIntake) {
 return Padding( padding: EdgeInsets.only(left: sizeWidth/20, ),
 child: Row(children: [
 Column( crossAxisAlignment: CrossAxisAlignment.start,
   children: [ 
 Text( currentTime, style: theme.textTheme.headlineMedium!.copyWith(fontSize: sizeHeight/45, fontWeight: FontWeight.w900),),
-Text('2 cups of water', style: theme.textTheme.headlineMedium!.copyWith(color: steelGray),),
+Text('${waterIntake.toInt()} cups of water', style: theme.textTheme.headlineMedium!.copyWith(color: steelGray),),
 SizedBox( height: sizeHeight/20),
+
+waterIntake < 8 ?
 ElevatedButton(onPressed: (){
 moveToNextScreen(context, WaterIntakeLog()); 
   },  style: ElevatedButton.styleFrom( fixedSize: Size(sizeWidth/3, 30), backgroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.elliptical(20, 20)))
   ), 
   child: Text('Drink', style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 15, fontWeight: FontWeight.normal), ),
+  ) 
+  : 
+
+  ElevatedButton(onPressed: (){
+  },  style: ElevatedButton.styleFrom( fixedSize: Size(sizeWidth/3, 30), backgroundColor: Colors.black87.withValues(alpha: 0.1), shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.elliptical(20, 20)))
+  ), 
+  child: Text('Goal Reached', style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 15, fontWeight: FontWeight.normal), ),
   )
   ],
 ),

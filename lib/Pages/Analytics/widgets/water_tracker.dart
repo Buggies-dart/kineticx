@@ -4,8 +4,8 @@ import 'package:kineticx/main.dart';
 import 'package:water_animation/water_animation.dart';
 
 class WaterTracker extends ConsumerStatefulWidget {
-  const WaterTracker({super.key, required this.boxDecoration, required this.sizeHeight, required this.sizeWidth, this.text});
-final Decoration boxDecoration; final double sizeHeight; final double sizeWidth; final Widget? text;
+  const WaterTracker({super.key, required this.boxDecoration, required this.sizeHeight, required this.sizeWidth});
+final Decoration boxDecoration; final double sizeHeight; final double sizeWidth;
   @override
   ConsumerState<WaterTracker> createState() => _WaterTrackerState();
 }
@@ -18,10 +18,6 @@ final cupsOfWaterDataRef = ref.watch(analyticsProvider).cupsOfWater;
 
 return Column( mainAxisAlignment: MainAxisAlignment.center,
   children: [
-  Stack(
-  alignment: Alignment.center,
-  children: [
-  
   WaterAnimation(
   width: widget.sizeWidth,
   height: widget.sizeHeight,
@@ -37,10 +33,7 @@ return Column( mainAxisAlignment: MainAxisAlignment.center,
   enableShader: false,
   realisticWave: true,
   decoration: widget.boxDecoration,
-   ),
-    
-  ]
-  )
+   )
   ],
   );
     

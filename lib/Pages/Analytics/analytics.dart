@@ -186,12 +186,18 @@ children: [
 activityTitle(theme, Images.waterDrop, 'Water'),
 SizedBox( height: sizeHeight/70),
 
-WaterTracker( boxDecoration: BoxDecoration( color: whiteColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
+Stack(
+  children: [ WaterTracker( boxDecoration: BoxDecoration( color: whiteColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
+    ),
+  sizeWidth: sizeWidth/2.5, sizeHeight: sizeHeight/11,
   ),
-sizeWidth: sizeWidth/2.5, sizeHeight: sizeHeight/11, text:   Consumer( builder: (context, ref, child) {
- final cupsOfWaterDataRef = ref.watch(analyticsProvider).cupsOfWater;
+ Positioned(  left: 45, top: 30,
+child: Consumer( builder: (context, ref, child) {
+final cupsOfWaterDataRef = ref.watch(analyticsProvider).cupsOfWater;
 return Text(' ${(cupsOfWaterDataRef / 125).toInt()}/8 Cups', style: theme.textTheme.bodySmall!.copyWith( fontWeight: FontWeight.bold));
-}))
+    }),
+ )
+])
 ],
 ),
 ),
