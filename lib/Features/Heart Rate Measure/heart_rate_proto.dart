@@ -31,19 +31,46 @@ class _HeartRateMonitorState extends ConsumerState<HeartRateMonitor> {
   @override
   void initState() {
 super.initState();
-  _initializeCamera().then((_) {
-    if (mounted) {
-_startMeasuring();
-    }
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    _resetAndStartCamera();
   });
   }
 
-  Future<void> _initializeCamera() async {
-_cameras = await availableCameras();
-_cameraController = CameraController(_cameras!.first, ResolutionPreset.low);
-await _cameraController!.initialize();
-if (!mounted) return;
-setState(() {});
+
+Future<void> _resetAndStartCamera() async {
+  // Dispose existing controller
+  if (_cameraController != null) {
+    await _cameraController!.dispose();
+    _cameraController = null;
+  }
+
+  final controller = await _initializeCamera();
+  if (controller == null || !mounted) return;
+
+  _cameraController = controller;
+
+  await _cameraController!.setFlashMode(FlashMode.torch);
+
+  setState(() {
+    _isMeasuring = false;
+    _isProcessing = false;
+    intensityValues.clear();
+    isFingerDetected = false;
+  });
+
+  _startMeasuring();
+}
+
+Future<CameraController?> _initializeCamera() async {
+  try {
+    _cameras = await availableCameras();
+    final controller = CameraController(_cameras!.first, ResolutionPreset.low);
+    await controller.initialize();
+    return controller;
+  } catch (e) {
+    print("Camera initialization error: $e");
+    return null;
+  }
 }
 
 
@@ -58,8 +85,8 @@ void _startMeasuring() {
 
   _cameraController!.setFlashMode(FlashMode.torch); // Turn on Flash
 
-  _timer = Timer.periodic(Duration(milliseconds: 200), (timer) async {
-    if (!_isMeasuring || _isProcessing) return;
+ _timer = Timer.periodic(Duration(milliseconds: 200), (timer) async {
+  if (!_isMeasuring || _isProcessing || !mounted) return;
 
 _isProcessing = true; // Lock processing
 
@@ -118,17 +145,14 @@ setState(() {});
 }
 
 void _stopMeasuring() {
-setState(() {
- _isMeasuring = false;
-});
-
-_cameraController!.setFlashMode(FlashMode.off);
-_timer?.cancel();
-  }
+  _isMeasuring = false;
+  _timer?.cancel();
+  _cameraController?.setFlashMode(FlashMode.off);
+}
 
   @override
 void dispose() {
-_cameraController?.dispose();
+   _stopMeasuring();
 _timer?.cancel();
 super.dispose();
   }
