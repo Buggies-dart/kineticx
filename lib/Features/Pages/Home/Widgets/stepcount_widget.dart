@@ -41,7 +41,7 @@ class StepCountWidget extends StatelessWidget {
               ),
               ),
               title: Text('Steps Remaining', style: theme.textTheme.bodySmall),
-              trailing: Text('${maxStepCounts - stepCounts} steps', style: theme.textTheme.bodySmall),
+              trailing: Text( stepCounts > 10000 ? '0 steps' :'${maxStepCounts - stepCounts} steps', style: theme.textTheme.bodySmall),
             ),
           ),
         SizedBox( height: 30,

@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:kineticx/Firebase/firebase_widgets.dart';
-import 'package:kineticx/Pages/Onboarding%20screens/Assessments/setfitness_target.dart';
+import 'package:kineticx/Features/Pages/Onboarding%20screens/Assessments/setfitness_target.dart';
 import 'package:kineticx/Navigation/navigation.dart';
-import 'package:kineticx/Pages/Onboarding%20screens/login.dart';
+import 'package:kineticx/Features/Pages/Onboarding%20screens/login.dart';
 import 'package:kineticx/Utils/constants.dart';
 
 class FirebaseAuthMethods{

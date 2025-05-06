@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kineticx/Pages/Onboarding%20screens/Assessments/setage.dart';
+import 'package:kineticx/Features/Pages/Onboarding%20screens/Assessments/setage.dart';
 import 'package:kineticx/Widgets/widgets.dart';
 import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/main.dart';

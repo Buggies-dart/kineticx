@@ -58,7 +58,7 @@ void checkAndResetDailyMetrics(WidgetRef ref) async {
 print('lastSavedDate: $lastSavedDate');
 
   if (lastSavedDate != today) {
-
+print('New day detected. Resetting metrics...');
 await saveCurrentMetricsToHistory(prefs);
 
 ref.read(analyticsProvider.notifier).resetMetrics();
@@ -67,6 +67,8 @@ await prefs.setString('lastUpdatedDate', today);
 
   }
 else {
+print('Same day. No reset needed.');
+
 
 final stringStepList = prefs.getStringList('currentHeartRateData') ?? [];
 final stepList = stringStepList.map((e) => int.tryParse(e) ?? 0).toList();

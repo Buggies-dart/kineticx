@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kineticx/Pages/Analytics/widgets/calendar.dart';
-import 'package:kineticx/Pages/Analytics/widgets/heart_rate_equalizer.dart';
-import 'package:kineticx/Pages/Analytics/widgets/sleep_data.dart';
-import 'package:kineticx/Pages/Analytics/widgets/water_tracker.dart';
+import 'package:kineticx/Features/Pages/Analytics/widgets/calendar.dart';
+import 'package:kineticx/Features/Pages/Analytics/widgets/heart_rate_equalizer.dart';
+import 'package:kineticx/Features/Pages/Analytics/widgets/sleep_data.dart';
+import 'package:kineticx/Features/Pages/Analytics/widgets/water_tracker.dart';
 import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/main.dart';

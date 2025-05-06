@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kineticx/Pages/Onboarding%20screens/Widgets/phone_number.dart';
+import 'package:kineticx/Features/Pages/Onboarding%20screens/Widgets/phone_number.dart';
 
 void showSnackbar(
   BuildContext context, String text

@@ -68,7 +68,7 @@ Future<CameraController?> _initializeCamera() async {
     await controller.initialize();
     return controller;
   } catch (e) {
-    print("Camera initialization error: $e");
+    debugPrint("Camera initialization error: $e");
     return null;
   }
 }
