@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kineticx/Features/Pages/Onboarding%20screens/onboarding1.dart';
+import 'package:kineticx/Pages/Onboarding%20screens/onboarding1.dart';
 import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/Widgets/widgets.dart';
 import 'package:kineticx/Utils/components.dart';

@@ -48,7 +48,7 @@ headers: {
 });
 if (response.statusCode == 200) {
 List<dynamic> body = jsonDecode(response.body);
-print(body);
+print(' Target List: $body');
 return body.map((dynamic item) => item.toString()).toList();
 }
 else {
@@ -69,7 +69,7 @@ headers: {
 });
 if (response.statusCode == 200) {
 List<dynamic> body = jsonDecode(response.body);
-print(body);
+print('Target Exercise: $body');
 return body.map((dynamic item) => item.toString()).toList();
 }
 else {

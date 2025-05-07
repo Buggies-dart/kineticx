@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kineticx/Features/Step%20Counter/controllers/counter_controller.dart';
 import 'package:kineticx/Models/daily_health_data.dart';
 import 'package:kineticx/Navigation/navigation.dart';
-import 'package:kineticx/Features/Pages/Analytics/controllers/analytic_controller.dart';
-import 'package:kineticx/Features/Pages/Onboarding%20screens/Assessments/controllers/assesments.dart';
+import 'package:kineticx/Pages/Analytics/controllers/analytic_controller.dart';
+import 'package:kineticx/Pages/Onboarding%20screens/Assessments/controllers/assesments.dart';
 import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/Firebase/firebase_options.dart';
 

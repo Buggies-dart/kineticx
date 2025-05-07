@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kineticx/Features/Pages/Analytics/analytics.dart';
-import 'package:kineticx/Features/Pages/Explore/explore.dart';
-import 'package:kineticx/Features/Pages/Home/home.dart';
-import 'package:kineticx/Features/Pages/Profile/userprofile.dart';
+import 'package:kineticx/Pages/Analytics/analytics.dart';
+import 'package:kineticx/Pages/Explore/explore.dart';
+import 'package:kineticx/Pages/Home/home.dart';
+import 'package:kineticx/Pages/Profile/userprofile.dart';
 import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/Utils/components.dart';
 
