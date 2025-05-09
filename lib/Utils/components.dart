@@ -34,6 +34,7 @@ primaryColorLight: lilacPurple ,
 colorScheme: ColorScheme.light(
 onPrimaryContainer: steelGray,
 onPrimaryFixedVariant: slateGray,
+secondaryContainer: darkSlateGray,
 surfaceContainer: whiteColor,
 tertiaryContainer: smallChipColor,
 onErrorContainer: tomatoRed
