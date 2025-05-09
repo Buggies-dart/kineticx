@@ -57,23 +57,39 @@ void checkAndResetDailyMetrics(WidgetRef ref) async {
 
 print('lastSavedDate: $lastSavedDate');
 
-  if (lastSavedDate != today) {
+if (lastSavedDate != today) {
 print('New day detected. Resetting metrics...');
 await saveCurrentMetricsToHistory(prefs);
-
 ref.read(analyticsProvider.notifier).resetMetrics();
-
 await prefs.setString('lastUpdatedDate', today);
 
   }
 else {
+final analytics = ref.read(analyticsProvider);
 print('Same day. No reset needed.');
 
 
 final stringStepList = prefs.getStringList('currentHeartRateData') ?? [];
 final stepList = stringStepList.map((e) => int.tryParse(e) ?? 0).toList();
 
-    
+//  if(analytics.cupsOfWater != 0){
+// state = analytics.copyWith(cupsOfWater: prefs.getInt('currentCupsOfWater') ?? 0);
+//  }
+//  if (analytics.caloriesBurned > 0){
+// state = analytics.copyWith(caloriesBurned: prefs.getInt('currentCaloriesBurned') ?? 0); 
+//  }
+ 
+// if (analytics.bpm != 0){
+// state = analytics.copyWith(bpm: prefs.getInt('currentBpm') ?? 0); 
+//  }
+//  if (analytics.heartRateData.isNotEmpty){
+// state = analytics.copyWith(heartRateData: stepList); 
+//  }
+//  if (analytics.sleepData.isNotEmpty){
+// state = analytics.copyWith(sleepData: []); 
+//  }
+
+
 UserAnalytics userAnalytics = UserAnalytics(
 cupsOfWater: prefs.getInt('currentCupsOfWater') ?? 0,
 caloriesBurned: prefs.getInt('currentCaloriesBurned') ?? 0,
@@ -94,4 +110,6 @@ void resetMetrics() {
   bpm: 0,
   );
 }
+
+
 }

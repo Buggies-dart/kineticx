@@ -57,8 +57,8 @@ throw Exception('Failed to load exercises from API: ${response.statusCode}');
 }
 
 
-Future<List<String>> target() async {
-final url = Uri.parse('https://exercisedb.p.rapidapi.com/exercises/target/abductors?limit=10&offset=0');
+Future<List<String>> targetBodyPartList() async {
+final url = Uri.parse('https://exercisedb.p.rapidapi.com/exercises/bodyPart/back?limit=10&offset=0');
 if (apiKey.isEmpty) {
 throw Exception('API key is missing. Set the API_KEY environment variable.');
 }
@@ -69,7 +69,7 @@ headers: {
 });
 if (response.statusCode == 200) {
 List<dynamic> body = jsonDecode(response.body);
-print('Target Exercise: $body');
+print('Target Exercise Are Listed: $body');
 return body.map((dynamic item) => item.toString()).toList();
 }
 else {

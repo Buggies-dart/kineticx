@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:kineticx/API/fetchworkouts.dart';
 import 'package:kineticx/Features/Step%20Counter/counter.dart';
 import 'package:kineticx/Features/Water%20Tracker/water_intake_log.dart';
 import 'package:kineticx/Helper/target_body_parts_filter.dart';
@@ -17,6 +18,7 @@ import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/Widgets/shimmers.dart';
 import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/main.dart';
+import 'package:kineticx/popular_workout_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
@@ -32,8 +34,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     super.initState();
 ref.read(HomeController.userName);
   getbodyPartFilter();
-printHistory();
-  }
+ExerciseDBApi().targetBodyPartList();  
+}
 DateTime? _lastPressedAt;
 
 Future<void> printHistory() async {
@@ -67,7 +69,7 @@ Text(username, style: theme.textTheme.headlineMedium!.copyWith(fontSize: sizeHei
 }, error:(error, _) => Text('Error: $error'),  loading: ()=>  usernameLoading(sizeHeight, sizeWidth)
 );
 
-final bodyPartListAsyncValue = ref.watch(HomeController.bodyPartList);
+final bodyPartListAsyncValue = ref.watch(HomeController.listBodyParts);
 
 final bodyParts = bodyPartListAsyncValue.when(data: (parts) {
 return SizedBox( height: sizeHeight/3.8,
@@ -139,7 +141,8 @@ Padding( padding:  EdgeInsets.only(bottom: sizeHeight/70, left: sizeHeight/70,  
 child: Text('Popular Workouts', style: theme.textTheme.titleMedium,),
 ),
       
- bodyParts,
+ InkWell( onTap: (){ moveToNextScreen(context, PopularWorkoutPage());},
+child: bodyParts),
         
 Padding(
 padding: EdgeInsets.only(bottom: sizeHeight/70, left: sizeHeight/70, top:  sizeHeight/70),

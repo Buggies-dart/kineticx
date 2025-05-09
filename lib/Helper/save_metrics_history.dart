@@ -23,7 +23,7 @@ List<String> history = prefs.getStringList('metricsHistory') ?? [];
 
   // Add new day to history
 history.add(historyEntry.toString()); 
-
+print('📦 Saving to history: $currentCups, $currentCalories, $heartRates, $currentBpm');
   // Save updated history
 await prefs.setStringList('metricsHistory', history);
 }  
