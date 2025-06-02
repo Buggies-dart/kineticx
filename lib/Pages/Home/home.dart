@@ -136,7 +136,7 @@ child: Text('Popular Workouts', style: theme.textTheme.titleMedium,),
  return SizedBox( height: sizeHeight/3.8,
    child: ListView.builder(itemCount: parts.length, scrollDirection: Axis.horizontal, itemBuilder: (context, index) {
    final part = parts[index];
-   return InkWell( onTap: () => moveToNextScreen(context, PopularWorkoutPage(bodyPart: part['bodyPart'])),
+   return InkWell( onTap: () => moveToNextScreen(context, PopularWorkoutPage(bodyPart: part['bodyPart'], imageUrl: part['image'],)),
 child: popularWorkoutsContainer(sizeHeight, sizeWidth, theme, part['bodyPart'], part['image']));
    }),
  );

@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kineticx/API/controllers/api_controller.dart';
+import 'package:kineticx/API/fetchworkouts.dart';
 import 'package:kineticx/Utils/components.dart';
-import 'package:kineticx/Utils/pngs.dart';
 
 class PopularWorkoutPage extends ConsumerStatefulWidget {
-  const PopularWorkoutPage({super.key, required this.bodyPart});
-final String bodyPart;
+  const PopularWorkoutPage({super.key, required this.bodyPart, required this.imageUrl});
+final String bodyPart; final String imageUrl;
   @override
   ConsumerState<PopularWorkoutPage> createState() => _PopularWorkoutPageState();
 }
@@ -54,7 +54,7 @@ body: SafeArea(
       Stack( clipBehavior: Clip.none, alignment: Alignment.center, 
       children: [ 
       Container( height: sizeHeight/4, width: sizeWidth/1.1, 
-      decoration: BoxDecoration( image: const DecorationImage( image: AssetImage(Images.getStarted), fit: BoxFit.cover),
+      decoration: BoxDecoration( image: DecorationImage( image: AssetImage(widget.imageUrl), fit: BoxFit.cover),
        borderRadius: BorderRadius.all(Radius.elliptical(20, 20)),   ),
       ),
       Positioned( bottom: -1.8,
@@ -116,7 +116,11 @@ body: SafeArea(
       
       Text('${widget.bodyPart} Workout', style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 20)),
       SizedBox(height: sizeHeight/50),
-      Text('This workout is designed to strengthen and tone your lower body muscles, including your quads, hamstrings, glutes, and calves. It includes a variety of exercises that target these muscle groups and can be done with or without weights.', style: theme.textTheme.bodyMedium!.copyWith(color: whiteColor.withValues(alpha: 0.5), fontSize: 14)),
+     
+bodyPartAsyncValue.when(
+data: (bodyParts) => Column(
+  children: [
+ Text(ExerciseDBApi.getTextPreviews(widget.bodyPart), style: theme.textTheme.bodyMedium!.copyWith(color: whiteColor.withValues(alpha: 0.5), fontSize: 14)),
       
       SizedBox(height: sizeHeight/15),
       
@@ -125,33 +129,34 @@ children: [
 Text('Rounds', style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 20)),
 Text('1/8', style: theme.textTheme.headlineMedium!.copyWith(color: whiteColor),)
 ]),
-bodyPartAsyncValue.when(
-data: (bodyParts) => SizedBox(
-height: sizeHeight, width: sizeWidth, child: ListView.builder(
-physics: NeverScrollableScrollPhysics(), itemCount: 10, scrollDirection: Axis.vertical,
-itemBuilder: (context, index) {
-return Padding( padding: const EdgeInsets.symmetric(vertical: 8),
-child: SizedBox( height: sizeHeight / 10,
-child: ListTile( tileColor: darkSlateGray, contentPadding:
-EdgeInsets.only( left: 10, right: 10),
-shape: RoundedRectangleBorder(
-borderRadius: BorderRadius.circular(20)),
-leading: Container(
- width: 50, height: 50,
-decoration: BoxDecoration(
-image: DecorationImage( image: NetworkImage(bodyParts[index]['gifUrl']), fit: BoxFit.cover),
-borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
+    SizedBox(
+    height: sizeHeight, width: sizeWidth, child: ListView.builder(
+    physics: NeverScrollableScrollPhysics(), itemCount: 10, scrollDirection: Axis.vertical,
+    itemBuilder: (context, index) {
+    return Padding( padding: const EdgeInsets.only( bottom: 8, top: 8),
+    child: SizedBox( height: sizeHeight / 10,
+    child: ListTile( tileColor: darkSlateGray, contentPadding:
+    EdgeInsets.only( left: 10, right: 10, top: 5),
+    shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(20)),
+    leading: Container(
+     width: 50, height: 50,
+    decoration: BoxDecoration(
+    image: DecorationImage( image: NetworkImage(bodyParts[index]['gifUrl']), fit: BoxFit.cover),
+    borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
+    ),
+    
+    ), 
+    title: Text(bodyParts[index]['name'], overflow: TextOverflow.ellipsis, maxLines: 1, style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 16)),
+    subtitle: Text('00.35'), trailing: Icon(Icons.play_circle_fill,
+    color: theme.primaryColor, size: 30),
+    ),
+    ),
+    );
+    }),
+      ),
+  ],
 ),
-
-), 
-title: Text(bodyParts[index]['name'], style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 16)),
-subtitle: Text('00.35'), trailing: Icon(Icons.play_circle_fill,
-color: theme.primaryColor, size: 30),
-),
-),
-);
-}),
-  ),
   loading: () => Center(child: CircularProgressIndicator(color: theme.primaryColor)),
   error: (error, stack) => Center(
 child: Text('Error: $error',

@@ -90,7 +90,21 @@ headers: {
 if (response.statusCode == 200) {
 List<dynamic> body = jsonDecode(response.body);
 print(body);
-return body.cast<Map<String, dynamic>>();
+
+final List<Map<String, dynamic>> bodyPartsWithImages = body.map((dynamic item){
+String word = item.toString(); String nameUperCase = item['name'];
+return {
+  'id': item['id'],
+  'name': nameUperCase[0].toUpperCase() + nameUperCase.substring(1),
+  'gifUrl': item['gifUrl'],
+  'bodyPart': word[0].toUpperCase() + word.substring(1),
+  'target': item['target'],
+  'equipment': item['equipment'],
+  'image': getImageForBodyPart(word),
+  'preview': getTextPreviews(word),
+};
+}).toList();
+return bodyPartsWithImages;
 }
 else {
 throw Exception('Failed to load exercises from API: ${response.statusCode}');
@@ -101,7 +115,7 @@ throw Exception('Failed to load exercises from API: ${response.statusCode}');
 
 
  // Function to map body part to image
- String getImageForBodyPart(String bodyPart) {
+  String getImageForBodyPart(String bodyPart) {
 switch (bodyPart.toLowerCase()) {
 case 'chest': return Images.chestImage;
 case 'back': return Images.backImage;
@@ -112,6 +126,20 @@ case 'abs': return 'assets/images/sportywoman.png';
 case 'glutes': return 'assets/images/sportywoman.png';
 case 'calves': return 'assets/images/sportywoman.png';
 default: return 'assets/images/sportywoman.png';
+}
+}
+
+ static String getTextPreviews(String bodyPart) {
+switch (bodyPart.toLowerCase()) {
+case 'chest': return 'Build a powerful, defined chest with our chest-focused workouts. Tone your pecs, increase strength, and develop a muscular upper body with exercises that push you to new limits, perfect for all fitness levels.';
+case 'back': return 'Strengthen and tone your back muscles with targeted exercises designed to improve posture, increase flexibility, and reduce the risk of injury. Achieve a sculpted, balanced look with our easy-to-follow, guided back workouts.';
+case 'cardio': return  'Boost your cardiovascular health and endurance with our dynamic cardio workouts. From high-intensity interval training to steady-state exercises, find the perfect routine to elevate your heart rate and burn calories effectively.';
+case 'lower arms': return 'Enhance your grip strength and forearm definition with our lower arm workouts. Targeted exercises will help you build muscular forearms, improve your overall arm strength, and enhance your performance in various sports and activities.';
+case 'lower legs': return 'Strengthen and shape your calves and lower legs with effective workouts designed to boost stability and athletic performance. From calf raises to dynamic movements, these exercises will help you achieve balanced, strong legs';
+case 'upper legs': return 'Sculpt and tone your upper legs with a variety of challenging workouts that focus on your quads, hamstrings, and glutes. Enhance leg strength, improve balance, and build lean muscle with our dynamic routines';
+case 'waist': return 'Shape and define your waistline with workouts that focus on core strength, stability, and toning. Target obliques, lower abs, and more for a sculpted, lean midsection that enhances your overall fitness profile.';
+case 'neck': return 'Improve your neck strength and mobility with specialized exercises designed to reduce tension and enhance posture. Develop a strong, supportive neck to complement your fitness routine and prevent neck strain.';
+default: return 'Explore a dynamic fitness app offering specialized workouts for back, cardio, chest, lower arms, lower legs, upper legs, waist training, and neck. Transform your body with guided routines, progress tracking, and real-time feedback. Achieve your goals today!';
 }
 }
 }
