@@ -23,12 +23,12 @@ headers: {
 if (response.statusCode == 200) {
 List<dynamic> body = jsonDecode(response.body);
 
- List<Map<String, dynamic>> bodyPartsWithImages = body.map((dynamic item) {
+ List<Map<String, dynamic>> bodyPartListWithImages = body.map((dynamic item) {
 String word = item.toString();
 return  {'bodyPart': word[0].toUpperCase() + word.substring(1), 'image': getImageForBodyPart(word)};
 }).toList();
 
-return  bodyPartsWithImages;
+return  bodyPartListWithImages;
 } else {
 throw  Exception('Failed to load exercises from API: ${response.statusCode}');
 }
@@ -77,8 +77,8 @@ throw Exception('Failed to load exercises from API: ${response.statusCode}');
 }
 }
 
-Future<List<String>> bodyPart() async {
-final url = Uri.parse('https://exercisedb.p.rapidapi.com/exercises/bodyPart/back?limit=10&offset=0');
+Future<List<Map<String, dynamic>>> bodyPart(String body) async {
+final url = Uri.parse('https://exercisedb.p.rapidapi.com/exercises/bodyPart/$body?limit=10&offset=0');
 if (apiKey.isEmpty) {
 throw Exception('API key is missing. Set the API_KEY environment variable.');
 }
@@ -90,7 +90,7 @@ headers: {
 if (response.statusCode == 200) {
 List<dynamic> body = jsonDecode(response.body);
 print(body);
-return body.map((dynamic item) => item.toString()).toList();
+return body.cast<Map<String, dynamic>>();
 }
 else {
 throw Exception('Failed to load exercises from API: ${response.statusCode}');

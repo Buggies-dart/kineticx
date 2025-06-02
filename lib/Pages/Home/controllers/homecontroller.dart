@@ -5,7 +5,7 @@ import 'package:kineticx/API/controllers/api_controller.dart';
 
 class HomeController {
 //  Username
-static final userName =   FutureProvider<String?>((ref) async {
+static final userName = FutureProvider<String?>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid; 
   final userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
   if (userDoc.exists) {

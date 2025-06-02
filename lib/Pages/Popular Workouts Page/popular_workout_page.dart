@@ -2,17 +2,20 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kineticx/API/controllers/api_controller.dart';
 import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/Utils/pngs.dart';
 
-class PopularWorkoutPage extends StatefulWidget {
-  const PopularWorkoutPage({super.key});
-
+class PopularWorkoutPage extends ConsumerStatefulWidget {
+  const PopularWorkoutPage({super.key, required this.bodyPart});
+final String bodyPart;
   @override
-  State<PopularWorkoutPage> createState() => _PopularWorkoutPageState();
+  ConsumerState<PopularWorkoutPage> createState() => _PopularWorkoutPageState();
 }
 
-class _PopularWorkoutPageState extends State<PopularWorkoutPage> {
+class _PopularWorkoutPageState extends ConsumerState<PopularWorkoutPage> {
+
   @override
   Widget build(BuildContext context) {
 
@@ -22,6 +25,10 @@ class _PopularWorkoutPageState extends State<PopularWorkoutPage> {
 // Screen Size
 final sizeHeight = MediaQuery.of(context).size.height;
 final sizeWidth = MediaQuery.of(context).size.width;
+
+// State Management
+
+final bodyPartAsyncValue = ref.watch(bodyPart(widget.bodyPart.toLowerCase()));
 
 return Scaffold( backgroundColor: Colors.black, 
 floatingActionButton: SizedBox( width: sizeWidth/1.15,
@@ -107,7 +114,7 @@ body: SafeArea(
       ) ),),
       SizedBox(height: sizeHeight/15),
       
-      Text('Lower Body Workout', style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 20)),
+      Text('${widget.bodyPart} Workout', style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 20)),
       SizedBox(height: sizeHeight/50),
       Text('This workout is designed to strengthen and tone your lower body muscles, including your quads, hamstrings, glutes, and calves. It includes a variety of exercises that target these muscle groups and can be done with or without weights.', style: theme.textTheme.bodyMedium!.copyWith(color: whiteColor.withValues(alpha: 0.5), fontSize: 14)),
       
@@ -118,24 +125,38 @@ children: [
 Text('Rounds', style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 20)),
 Text('1/8', style: theme.textTheme.headlineMedium!.copyWith(color: whiteColor),)
 ]),
-SizedBox( height: sizeHeight, width: sizeWidth,
-child: ListView.builder( physics: NeverScrollableScrollPhysics(), itemCount: 10, scrollDirection: Axis.vertical,
-itemBuilder: (context, index){ 
-return Padding(
-padding: const EdgeInsets.symmetric(vertical: 8),
-child: SizedBox( height: sizeHeight/10,
-child: ListTile( 
-tileColor: darkSlateGray, contentPadding: EdgeInsets.only(top: 5, left: 10, right: 10), shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(20)),
-leading: Container( width: 50, height: 50, decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
-
-image: DecorationImage( image: AssetImage(Images.getStarted), fit: BoxFit.cover),)
-), title: Text('Squats', style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 16),
+bodyPartAsyncValue.when(
+data: (bodyParts) => SizedBox(
+height: sizeHeight, width: sizeWidth, child: ListView.builder(
+physics: NeverScrollableScrollPhysics(), itemCount: 10, scrollDirection: Axis.vertical,
+itemBuilder: (context, index) {
+return Padding( padding: const EdgeInsets.symmetric(vertical: 8),
+child: SizedBox( height: sizeHeight / 10,
+child: ListTile( tileColor: darkSlateGray, contentPadding:
+EdgeInsets.only( left: 10, right: 10),
+shape: RoundedRectangleBorder(
+borderRadius: BorderRadius.circular(20)),
+leading: Container(
+ width: 50, height: 50,
+decoration: BoxDecoration(
+image: DecorationImage( image: NetworkImage(bodyParts[index]['gifUrl']), fit: BoxFit.cover),
+borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
 ),
-subtitle: Text('00.35'), trailing: Icon(Icons.play_circle_fill, color: theme.primaryColor, size: 30),),
+
+), 
+title: Text(bodyParts[index]['name'], style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 16)),
+subtitle: Text('00.35'), trailing: Icon(Icons.play_circle_fill,
+color: theme.primaryColor, size: 30),
+),
 ),
 );
 }),
-    )
+  ),
+  loading: () => Center(child: CircularProgressIndicator(color: theme.primaryColor)),
+  error: (error, stack) => Center(
+child: Text('Error: $error',
+style: theme.textTheme.bodyMedium!.copyWith(color: Colors.red))),
+)
 ],
 ),
     ),

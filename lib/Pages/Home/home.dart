@@ -18,7 +18,7 @@ import 'package:kineticx/Utils/pngs.dart';
 import 'package:kineticx/Widgets/shimmers.dart';
 import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/main.dart';
-import 'package:kineticx/popular_workout_page.dart';
+import 'package:kineticx/Pages/Popular%20Workouts%20Page/popular_workout_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
@@ -70,15 +70,6 @@ Text(username, style: theme.textTheme.headlineMedium!.copyWith(fontSize: sizeHei
 );
 
 final bodyPartListAsyncValue = ref.watch(HomeController.listBodyParts);
-
-final bodyParts = bodyPartListAsyncValue.when(data: (parts) {
-return SizedBox( height: sizeHeight/3.8,
-  child: ListView.builder(itemCount: parts.length, scrollDirection: Axis.horizontal, itemBuilder: (context, index) {
-  final part = parts[index];
-  return popularWorkoutsContainer(sizeHeight, sizeWidth, theme, part['bodyPart'], part['image']);
-  }),
-);
-}, error: (err, stack) => Center(child: Text('Error: $err'),), loading: () => bodypartLoading(sizeHeight, sizeWidth));
 
 
 final stepCounts = ref.watch(stepCountProvider);
@@ -141,8 +132,15 @@ Padding( padding:  EdgeInsets.only(bottom: sizeHeight/70, left: sizeHeight/70,  
 child: Text('Popular Workouts', style: theme.textTheme.titleMedium,),
 ),
       
- InkWell( onTap: (){ moveToNextScreen(context, PopularWorkoutPage());},
-child: bodyParts),
+ bodyPartListAsyncValue.when(data: (parts) {
+ return SizedBox( height: sizeHeight/3.8,
+   child: ListView.builder(itemCount: parts.length, scrollDirection: Axis.horizontal, itemBuilder: (context, index) {
+   final part = parts[index];
+   return InkWell( onTap: () => moveToNextScreen(context, PopularWorkoutPage(bodyPart: part['bodyPart'])),
+child: popularWorkoutsContainer(sizeHeight, sizeWidth, theme, part['bodyPart'], part['image']));
+   }),
+ );
+ }, error: (err, stack) => Center(child: Text('Error: $err'),), loading: () => bodypartLoading(sizeHeight, sizeWidth)),
         
 Padding(
 padding: EdgeInsets.only(bottom: sizeHeight/70, left: sizeHeight/70, top:  sizeHeight/70),

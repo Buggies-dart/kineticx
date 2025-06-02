@@ -12,3 +12,8 @@ return await ExerciseDBApi().targetBodyParts();
 final bodyPartList = FutureProvider<List<Map<String, dynamic>>>((ref) async {
 return await ExerciseDBApi().bodyPartList();
 });
+
+// Use a FutureProvider.family to accept 'body' as a parameter
+final bodyPart = FutureProvider.family<List<Map<String, dynamic>>, String>((ref, body) async {
+  return await ExerciseDBApi().bodyPart(body);
+});
