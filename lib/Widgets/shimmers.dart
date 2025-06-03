@@ -14,13 +14,10 @@ class ShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 return Shimmer.fromColors( baseColor: Colors.grey[300]!, highlightColor: Colors.grey[100]!,
-child: Row(
-children: [ 
-Container( height: sizeHeight, width: sizeWidth, 
+child: Container( height: sizeHeight, width: sizeWidth, 
 decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.elliptical(20, 20)),
 color: Colors.red),
 ),
-    ]),
     );
   }
 }
