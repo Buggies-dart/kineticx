@@ -93,6 +93,8 @@ print(body);
 
 final List<Map<String, dynamic>> bodyPartsWithImages = body.map((dynamic item){
 String word = item.toString(); String nameUperCase = item['name'];
+List instructions = item['instructions'] ?? ''; 
+List secondaryMuscles = item['secondaryMuscles'];
 return {
   'id': item['id'],
   'name': nameUperCase[0].toUpperCase() + nameUperCase.substring(1),
@@ -100,6 +102,9 @@ return {
   'bodyPart': word[0].toUpperCase() + word.substring(1),
   'target': item['target'],
   'equipment': item['equipment'],
+  'secondaryMuscles': secondaryMuscles,
+  'description': item['description'],
+  'instructions': instructions,
   'image': getImageForBodyPart(word),
   'preview': getTextPreviews(word),
 };

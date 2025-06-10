@@ -41,6 +41,6 @@ static const home = 'assets/buttons/Home.png';
 static const explore = 'assets/buttons/Explore.png';
 static const profile = 'assets/buttons/Profile.png';
 static const statistic = 'assets/buttons/Statistic.png';
-
+static const replace = 'assets/buttons/Replace.png';
 
 }
