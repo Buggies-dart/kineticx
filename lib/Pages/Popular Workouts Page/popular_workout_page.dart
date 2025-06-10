@@ -132,9 +132,10 @@ Text('1/8', style: theme.textTheme.headlineMedium!.copyWith(color: whiteColor),)
 ]),
 bodyPartAsyncValue.when(
 data: (bodyParts) => SizedBox(
-height: sizeHeight, width: sizeWidth, child: ListView.builder(
-physics: NeverScrollableScrollPhysics(), itemCount: 10, scrollDirection: Axis.vertical,
+height: sizeHeight + sizeHeight/6, width: sizeWidth, child: ListView.builder(
+physics: NeverScrollableScrollPhysics(), itemCount: bodyParts.length, scrollDirection: Axis.vertical,
 itemBuilder: (context, index) {
+print('Body Part: ${bodyParts[index]['name']}');
 return Padding( padding: const EdgeInsets.only( bottom: 8, top: 8),
 child: SizedBox( height: sizeHeight / 10,
 child: InkWell( onTap: (){  moveToNextScreen(context, WorkoutPage(workout: bodyParts[index],));
@@ -173,6 +174,7 @@ style: theme.textTheme.bodyMedium!.copyWith(color: Colors.red))),
 ],
 ),
     ),
+SizedBox(height: 100),
       ]),
   ),
 )

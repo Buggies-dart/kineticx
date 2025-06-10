@@ -43,6 +43,7 @@ Padding(
 padding: const EdgeInsets.only(left: 8),
 child: Text(subtitle, style: theme.textTheme.bodySmall!.copyWith(fontSize: 18),),
 ),
+SizedBox( height: sizeHeight/50),
 elevatedButton
 ],
 ),

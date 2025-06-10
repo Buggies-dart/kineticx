@@ -27,8 +27,8 @@ List<dynamic> body = jsonDecode(response.body);
 String word = item.toString();
 return  {'bodyPart': word[0].toUpperCase() + word.substring(1), 'image': getImageForBodyPart(word)};
 }).toList();
-
-return  bodyPartListWithImages;
+ final bodyPartListWithImageshuffled = bodyPartListWithImages.toList()..shuffle();
+return  bodyPartListWithImageshuffled;
 } else {
 throw  Exception('Failed to load exercises from API: ${response.statusCode}');
 }
