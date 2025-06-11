@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kineticx/Navigation/navigation.dart';
+import 'package:kineticx/Pages/Popular%20Workouts%20Page/popular_workout_page.dart';
 import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/Utils/pngs.dart';
+import 'package:kineticx/main.dart';
 
 
 class WorkoutPage extends ConsumerStatefulWidget {
-  const WorkoutPage({super.key, required this.workout});
-final Map<String, dynamic> workout;
+  const WorkoutPage({super.key, required this.workout, required this.index});
+final List<Map<String, dynamic>> workout;
+final int index;
   @override
   ConsumerState<WorkoutPage> createState() => _WorkoutPageState();
 }
@@ -22,26 +26,11 @@ class _WorkoutPageState extends ConsumerState<WorkoutPage> {
 final sizeHeight = MediaQuery.of(context).size.height;
 final sizeWidth = MediaQuery.of(context).size.width;
 
+// Workout Title
 
+final String workoutTitle = widget.workout[widget.index]['name'] ?? 'Workout';
 return Scaffold(
-floatingActionButton: Material( elevation: 10, shadowColor: Colors.black,
-  child: Container( color: theme.colorScheme.tertiaryContainer.withValues(alpha: 0.5),
-  width: sizeWidth, height: sizeHeight / 12,
-  child: Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  children: [
-  CircleAvatar(backgroundColor: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3), child: Icon(Icons.skip_previous,),),
-  Text('1/10', style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, fontSize: 18),),
-  CircleAvatar(backgroundColor: theme.primaryColor.withValues(alpha: 0.5), child: Icon(Icons.skip_next, color: theme.primaryColor.withValues(alpha: 0.9),),),
-  
-SizedBox( width: sizeWidth/2, height: sizeHeight/15,
-  child: ElevatedButton(onPressed: (){Navigator.pop(context);}, style:  ElevatedButton.styleFrom( backgroundColor: textColorBlack,
-  shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(30))),
-  child: Text('Close',   style:TextStyle(fontSize: 16, color: whiteColor))),
-),
-  ],
-  ),
-  ),
-),
+floatingActionButton: floatingActionButton(theme, sizeWidth, sizeHeight, context, ref),
 floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 body: SingleChildScrollView( scrollDirection: Axis.vertical,
   child: SafeArea(child: 
@@ -51,7 +40,8 @@ body: SingleChildScrollView( scrollDirection: Axis.vertical,
     children: [
      Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
        children: [
-    Text("WORKOUT", style:  theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900,fontSize: 25),), 
+    SizedBox( width: sizeWidth/1.5,
+  child: Text(workoutTitle.toUpperCase(), overflow: TextOverflow.fade, style:  theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900,fontSize: 25),)), 
   Image.asset(Buttons.replace, width: 40, height: 40, color: theme.primaryColor,),
        ],
      ),
@@ -62,7 +52,7 @@ body: SingleChildScrollView( scrollDirection: Axis.vertical,
   width: sizeWidth, height: sizeHeight / 3,
   decoration: BoxDecoration(
   image: DecorationImage(
-    image: NetworkImage(widget.workout['gifUrl']), // Replace with your image path
+    image: NetworkImage(widget.workout[widget.index]['gifUrl']), // Replace with your image path
   fit: BoxFit.cover,),
     borderRadius: BorderRadius.circular(10),
      )
@@ -93,11 +83,11 @@ body: SingleChildScrollView( scrollDirection: Axis.vertical,
    ),
    SizedBox( height: sizeHeight/40,),
   Text('DESCRIPTIONS', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20)),
-  Text(widget.workout['description'].toString(), style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),),
+  Text(widget.workout[widget.index]['description'].toString(), style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),),
    
    SizedBox( height: sizeHeight/40,),
   Text('INSTRUCTIONS', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20)),
-  Text(widget.workout['instructions'].toString(), style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),),
+  Text(widget.workout[widget.index]['instructions'].toString(), style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),),
    
    SizedBox( height: sizeHeight/40,),
   Text('FOCUS AREA', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20)),
@@ -111,13 +101,13 @@ child: Row(
 children: [
 Icon(Icons.circle, color: theme.primaryColor, size: 20,), 
 SizedBox(width: 5),
-Text(widget.workout['target'], style: theme.textTheme.titleMedium,),
+Text(widget.workout[widget.index]['target'], style: theme.textTheme.titleMedium,),
       
 ],),
 ),
 
 SizedBox( height: sizeHeight/15, width: sizeWidth/1.3,
-child: ListView.builder( scrollDirection: Axis.horizontal, itemCount: 2 , padding: EdgeInsets.only(top: 0),
+child: ListView.builder( scrollDirection: Axis.horizontal, itemCount: widget.workout[widget.index]['secondaryMusclesLength'], padding: EdgeInsets.only(top: 0),
 itemBuilder: (context, index) => 
 Row( 
 children: [Padding( padding: const EdgeInsets.only(left: 10),
@@ -127,7 +117,7 @@ children: [Padding( padding: const EdgeInsets.only(left: 10),
   children: [
   Icon(Icons.circle, color: theme.primaryColor, size: 20,), 
   SizedBox(width: 5),
-  Text(widget.workout['secondaryMuscles'][index], style: theme.textTheme.titleMedium, overflow: TextOverflow.ellipsis,),
+  Text(widget.workout[widget.index]['secondaryMuscles'][index] ?? '', style: theme.textTheme.titleMedium, overflow: TextOverflow.ellipsis,),
   ],),
   ),
 ),
@@ -144,5 +134,42 @@ children: [Padding( padding: const EdgeInsets.only(left: 10),
   ),
 ));
     
+}
+
+Material floatingActionButton(ThemeData theme, double sizeWidth, double sizeHeight, BuildContext context, WidgetRef ref) {
+
+bool isFirstWorkout = widget.index + 1 == 1;
+bool isLastWorkout = widget.index + 1 == widget.workout.length;
+
+return Material( elevation: 10, shadowColor: Colors.black,
+child: Container( color: theme.colorScheme.tertiaryContainer.withValues(alpha: 0.5),
+width: sizeWidth, height: sizeHeight / 12,
+child: Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+children: [
+
+InkWell(onTap: isFirstWorkout ? () {} : (){
+moveToNextScreen(context, WorkoutPage(workout: widget.workout, index: widget.index - 1));
+},
+child: CircleAvatar(backgroundColor: isFirstWorkout ? theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3) : theme.primaryColor.withValues(alpha: 0.5), child: Icon(Icons.skip_previous, color: isFirstWorkout ? null : theme.primaryColor.withValues(alpha: 1), ),)),
+
+Text('${widget.index + 1}/${widget.workout.length}', style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, fontSize: 18),),
+
+InkWell( onTap:  isLastWorkout? (){} : () {
+moveToNextScreen(context, WorkoutPage(workout: widget.workout, index: widget.index + 1));},
+child: CircleAvatar(backgroundColor: isLastWorkout? theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3): theme.primaryColor.withValues(alpha: 0.5), child: Icon(Icons.skip_next, color:  isLastWorkout? null: theme.primaryColor.withValues(alpha: 1),),)),
+
+SizedBox( width: sizeWidth/2, height: sizeHeight/15,
+child: ElevatedButton(onPressed: (){
+final body = ref.read(bodyandImageProvider).bodyPart;
+final image = ref.read(bodyandImageProvider).imageUrl;
+moveToNextScreen(context, PopularWorkoutPage(bodyPart: body, imageUrl: image));
+}, style:  ElevatedButton.styleFrom( backgroundColor: textColorBlack,
+shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(30))),
+child: Text('Close',   style:TextStyle(fontSize: 16, color: whiteColor))),
+),
+],
+),
+),
+);
   }
 }

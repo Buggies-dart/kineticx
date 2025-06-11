@@ -103,6 +103,7 @@ return {
   'target': item['target'],
   'equipment': item['equipment'],
   'secondaryMuscles': secondaryMuscles,
+  'secondaryMusclesLength': secondaryMuscles.length,
   'description': item['description'],
   'instructions': instructions,
   'image': getImageForBodyPart(word),

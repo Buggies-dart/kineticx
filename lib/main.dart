@@ -7,6 +7,7 @@ import 'package:kineticx/Models/daily_health_data.dart';
 import 'package:kineticx/Navigation/navigation.dart';
 import 'package:kineticx/Pages/Analytics/controllers/analytic_controller.dart';
 import 'package:kineticx/Pages/Onboarding%20screens/Assessments/controllers/assesments.dart';
+import 'package:kineticx/Pages/Popular%20Workouts%20Page/controllers/pwp_controller.dart';
 import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/Firebase/firebase_options.dart';
 
@@ -37,7 +38,9 @@ final stepSessionProvider = StateNotifierProvider<StepSessionNotifier, StepSessi
   (ref) => StepSessionNotifier(),
 );
 
-
+final bodyandImageProvider = ChangeNotifierProvider<BodyAndImageUrlNotifier>((ref) {
+  return BodyAndImageUrlNotifier();
+});
 
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
