@@ -52,8 +52,67 @@ return PopularWorkoutPage(bodyPart: bodyPart, imageUrl: imageUrl);
        Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
          children: [
       SizedBox( width: sizeWidth/1.5,
-    child: Text(workoutTitle.toUpperCase(), overflow: TextOverflow.fade, style:  theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900,fontSize: 20),)), 
-    Image.asset(Buttons.replace, width: 40, height: 40, color: theme.primaryColor,),
+    child: Text(workoutTitle.toUpperCase(), overflow: TextOverflow.fade, style:  theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900,fontSize: 17),)), 
+    
+    InkWell( onTap: (){
+showModalBottomSheet( context: context, builder: (context) {
+  return Container(
+  height: sizeHeight,  width: double.infinity, padding: EdgeInsets.all(16), 
+  child: Column( crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Row(children: [
+Container( width: sizeWidth/4, height: sizeHeight/10, decoration: BoxDecoration( borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
+color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.1),),
+child:  Image.network(widget.workout[widget.index]['gifUrl'], width: 30, height: 30),
+),
+SizedBox( width: sizeWidth/20,),
+Column( crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Text(widget.workout[widget.index]['name'], style: theme.textTheme.titleMedium!.copyWith(fontSize: 16, fontWeight: FontWeight.w600),),
+Text('Replace it with...', style: theme.textTheme.bodyMedium!.copyWith(fontSize: 18, fontWeight: FontWeight.w900),),
+],)
+],
+),
+SizedBox( height: sizeHeight/30,),
+
+SizedBox( height: sizeHeight/15,
+  child: TextField( 
+  decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none), 
+  filled: true, fillColor: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.1), prefixIcon: Icon(Icons.search, size: 30, color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.1),),
+  contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 16), hintText: 'Search workouts by name or difficulties' , hintStyle: theme.textTheme.headlineMedium!.copyWith(
+  color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3))), 
+  ),
+),
+
+SizedBox( height: sizeHeight/30,),
+Text('Similar Workouts', style: theme.textTheme.titleMedium!.copyWith( color: theme.primaryColor ),),
+
+Expanded( 
+  child: ListView.builder(  itemCount: widget.workout.length, itemBuilder: (context, index) {
+  if (index == widget.index) return SizedBox.shrink(); 
+  if (widget.workout[index]['name'] == widget.workout[widget.index]['name']) return SizedBox.shrink();
+  final difficultyLevel = widget.workout[index]['difficulty'][0].toUpperCase() + widget.workout[index]['difficulty'].substring(1);
+  
+  return ListTile( onTap: () {
+Navigator.pop(context);
+moveToNextScreen(context, WorkoutPage(workout: widget.workout, index: index));
+  },
+  leading: CircleAvatar( backgroundImage: NetworkImage(widget.workout[index]['gifUrl']), radius: 30,),
+  title: Text(widget.workout[index]['name'], style: theme.textTheme.titleMedium!.copyWith(fontSize: 16, fontWeight: FontWeight.w900),),
+  subtitle: Text('Difficulty: $difficultyLevel', style: theme.textTheme.bodyMedium!.copyWith(fontSize: 14, fontWeight: FontWeight.w400),),
+
+    );
+  },
+  ),
+),
+],
+  )
+    );
+  },
+);
+
+    },
+child: Image.asset(Buttons.replace, width: 35, height: 35, color: theme.primaryColor,)),
          ],
        ),
       

@@ -106,6 +106,7 @@ return {
   'secondaryMusclesLength': secondaryMuscles.length,
   'description': item['description'],
   'instructions': instructions,
+  'difficulty': item['difficulty'],
   'image': getImageForBodyPart(word),
   'preview': getTextPreviews(word),
 };
