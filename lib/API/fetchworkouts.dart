@@ -78,7 +78,7 @@ throw Exception('Failed to load exercises from API: ${response.statusCode}');
 }
 
 Future<List<Map<String, dynamic>>> bodyPart(String body) async {
-final url = Uri.parse('https://exercisedb.p.rapidapi.com/exercises/bodyPart/$body?limit=10&offset=0');
+final url = Uri.parse('https://exercisedb.p.rapidapi.com/exercises/bodyPart/$body?limit=40&offset=0');
 if (apiKey.isEmpty) {
 throw Exception('API key is missing. Set the API_KEY environment variable.');
 }

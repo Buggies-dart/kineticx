@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kineticx/API/controllers/api_controller.dart';
 import 'package:kineticx/API/fetchworkouts.dart';
 import 'package:kineticx/Navigation/navigation.dart' show NavigationPage, moveToNextScreen;
-import 'package:kineticx/Pages/Home/home.dart';
 import 'package:kineticx/Utils/components.dart';
 import 'package:kineticx/Widgets/shimmers.dart';
 import 'package:kineticx/main.dart';
@@ -46,9 +45,14 @@ return NavigationPage();
 } ,
   child: Scaffold( backgroundColor: Colors.black, 
   floatingActionButton: SizedBox( width: sizeWidth/1.15,
-  child: FloatingActionButton.extended( backgroundColor: theme.primaryColor, onPressed: (){}, label: Text('Start Workout', style: theme.textTheme.titleMedium!.copyWith(fontSize: 16)),
-  elevation: 20,
-  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
+  child: bodyPartAsyncValue.when(data: (bodyParts)=>
+  FloatingActionButton.extended( backgroundColor: theme.primaryColor, onPressed: (){
+moveToNextScreen(context, WorkoutPage(workout: bodyParts, index: 0,));
+    }, label: Text('Start Workout', style: theme.textTheme.titleMedium!.copyWith(fontSize: 16)),
+    elevation: 20,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))
+  , error: (error, stack)=> Text(''), loading: ()=>Text(''),) 
+
   ),
   floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
   body: SafeArea(
@@ -57,7 +61,7 @@ return NavigationPage();
       children: [
       
       Row(children: [
-      IconButton(onPressed: (){moveToNextScreen(context, MyHomePage());}, icon: const Icon(Icons.arrow_back_ios_new_rounded, color: whiteColor,)),
+      IconButton(onPressed: (){moveToNextScreen(context, NavigationPage());}, icon: const Icon(Icons.arrow_back_ios_new_rounded, color: whiteColor,)),
       SizedBox(width: sizeWidth * 0.3),
       Text("Workout", style:  theme.textTheme.titleMedium!.copyWith(color: whiteColor),),
        ],
@@ -136,46 +140,50 @@ return NavigationPage();
         
   SizedBox(height: sizeHeight/15),
         
+  bodyPartAsyncValue.when(
+  data: (bodyParts) => Column(
+    children: [
   Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
   children: [
   Text('Rounds', style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 20)),
-  Text('1/8', style: theme.textTheme.headlineMedium!.copyWith(color: whiteColor),)
+  Text( bodyParts.length > 15 ? '15/${bodyParts.length.toString()}' : bodyParts.length.toString(), style: theme.textTheme.headlineMedium!.copyWith(color: whiteColor),)
   ]),
-  bodyPartAsyncValue.when(
-  data: (bodyParts) => SizedBox(
-  height: sizeHeight + sizeHeight/6, width: sizeWidth, child: ListView.builder(
-  physics: NeverScrollableScrollPhysics(), itemCount: bodyParts.length, scrollDirection: Axis.vertical,
-  itemBuilder: (context, index) {
-  return Padding( padding: const EdgeInsets.only( bottom: 8, top: 8),
-  child: SizedBox( height: sizeHeight / 10,
-  child: InkWell( onTap: (){ 
-  ref.read(bodyandImageProvider).updateBodyPart(widget.bodyPart.toLowerCase());
-  ref.read(bodyandImageProvider).updateImageUrl(widget.imageUrl);
-  moveToNextScreen(context, WorkoutPage(workout: bodyParts, index: index,));
-  },
-    child: ListTile( tileColor: darkSlateGray, contentPadding:
-    EdgeInsets.only( left: 10, right: 10, top: 5),
-    shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(20)),
-    leading: Container(
-     width: 50, height: 50,
-    decoration: BoxDecoration(
-    image: DecorationImage( image: NetworkImage(bodyParts[index]['gifUrl']), fit: BoxFit.cover),
-    borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
-    ),
-    
-    ), 
-    title: Text(bodyParts[index]['name'], overflow: TextOverflow.ellipsis, maxLines: 1, style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 16)),
-    subtitle: Text('00.35'), trailing: Icon(Icons.play_circle_fill,
-    color: theme.primaryColor, size: 30),
-    ),
+      SizedBox(
+      height: sizeHeight + sizeHeight/1.2, width: sizeWidth, child: ListView.builder(
+      physics: NeverScrollableScrollPhysics(), itemCount: bodyParts.length < 15 || bodyParts.length == 15 ? bodyParts.length : 15, scrollDirection: Axis.vertical,
+      itemBuilder: (context, index) {
+      return Padding( padding: const EdgeInsets.only( bottom: 8, top: 8),
+      child: SizedBox( height: sizeHeight / 10,
+      child: InkWell( onTap: (){ 
+      ref.read(bodyandImageProvider).updateBodyPart(widget.bodyPart.toLowerCase());
+      ref.read(bodyandImageProvider).updateImageUrl(widget.imageUrl);
+      moveToNextScreen(context, WorkoutPage(workout: bodyParts, index: index,));
+      },
+        child: ListTile( tileColor: darkSlateGray, contentPadding:
+        EdgeInsets.only( left: 10, right: 10, top: 5),
+        shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20)),
+        leading: Container(
+         width: 50, height: 50,
+        decoration: BoxDecoration(
+        image: DecorationImage( image: NetworkImage(bodyParts[index]['gifUrl']), fit: BoxFit.cover),
+        borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
+        ),
+        
+        ), 
+        title: Text(bodyParts[index]['name'], overflow: TextOverflow.ellipsis, maxLines: 1, style: theme.textTheme.titleMedium!.copyWith(color: whiteColor, fontSize: 16)),
+        subtitle: Text('00.35'), trailing: Icon(Icons.play_circle_fill,
+        color: theme.primaryColor, size: 30),
+        ),
+      ),
+      ),
+      );
+      }),
+        ),
+    ],
   ),
-  ),
-  );
-  }),
-    ),
   loading: () => SizedBox( height: sizeHeight, width: sizeWidth,
-    child: ListView.builder( physics: NeverScrollableScrollPhysics(), itemCount: 10, itemBuilder: (context, index){ return
+    child: ListView.builder( physics: NeverScrollableScrollPhysics(), itemCount: 15, itemBuilder: (context, index){ return
     Padding(  padding: EdgeInsets.only(top: 8, bottom: 8),
     child: ShimmerWidget(sizeHeight:  sizeHeight/10, sizeWidth: sizeWidth));
       }),

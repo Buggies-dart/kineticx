@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kineticx/Navigation/navigation.dart';
 import 'package:kineticx/Pages/Analytics/widgets/calendar.dart';
 import 'package:kineticx/Pages/Analytics/widgets/heart_rate_equalizer.dart';
 import 'package:kineticx/Pages/Analytics/widgets/sleep_data.dart';
@@ -53,163 +54,173 @@ final sizeHeight = MediaQuery.of(context).size.height;
 final sizeWidth = MediaQuery.of(context).size.width;
 final theme = Theme.of(context);
 
-return  Scaffold(
-body: SafeArea(
-  child: Padding(
-    padding: const EdgeInsets.all(10),
-    child: Column( crossAxisAlignment: CrossAxisAlignment.start,
+return  PopScope(
+canPop: false,
+onPopInvoked: (didPop){
+if (!didPop) {
+Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+return NavigationPage();
+}), (route) => false);
+}
+},
+  child: Scaffold(
+  body: SafeArea(
+    child: Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column( crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      Calendar(selectedDay: selectedDay, focusedDay: focusedDay,),
+      SizedBox(height: sizeHeight/25),
+      isToday? Text("Today's Report", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)) :
+      Text(
+      "Your progress on ${selectedDay.toLocal()}",
+      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+  
+  Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container( height: sizeHeight/12, width: double.infinity, decoration: BoxDecoration( border: Border.all(width: 0.5, color: theme.colorScheme.onPrimaryContainer),
+    borderRadius: BorderRadius.all(Radius.elliptical(10, 10)), color: theme.colorScheme.surfaceContainer),
+    child: Column(
     children: [
-    Calendar(selectedDay: selectedDay, focusedDay: focusedDay,),
-    SizedBox(height: sizeHeight/25),
-    isToday? Text("Today's Report", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)) :
-    Text(
-    "Your progress on ${selectedDay.toLocal()}",
-    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    Text('Active Calories', style: theme.textTheme.titleMedium),
+    SizedBox(height: 5),
+    Text('645 kCal', style: theme.textTheme.headlineMedium,)
+    ],
+  ),
+  ),
+  ),
+  SizedBox(height: sizeHeight/40),
+     
+  Row(
+    children: [
+      Container( width: sizeWidth/2, height: sizeHeight/4.5,
+      decoration: BoxDecoration(
+      color: Color(0xFFFFEBEB), borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
+      ),
+      child: Column(
+      children: [
+      activityTitle(theme, Images.heartRate, 'Heart Rate'),
+      SizedBox(height: 5),
+      Padding(
+      padding: const EdgeInsets.all(12),
+      child: Container( decoration: BoxDecoration(color: theme.colorScheme.surfaceContainer,  borderRadius: BorderRadius.circular(10)),
+      height: sizeHeight/7.5, width: sizeWidth/2.4,
+        child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+      children: [
+  HeartRateEqualizer(),
+  Consumer( builder: (context, ref, child) =>  Text('                       ${ref.watch(analyticsProvider).bpm} Bpm', style: theme.textTheme.labelMedium!.copyWith(color: Colors.black)))
+  ],
+  ),
+  )),
+  )
+  ],
+  ),),
+  SizedBox(width: 10),
+  Column(
+  children: [
+  Container( height: sizeHeight/7, width: sizeWidth/2.5, decoration: BoxDecoration( color: Color(0xFFFFE8C6),
+  borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
+  ),
+  child: Column(children: [
+  activityTitle(theme, Images.steps, 'Steps'),
+  SizedBox(height: 15),
+  
+  Consumer( builder: (context, ref, child) {
+  final stepCount = ref.watch(stepCountProvider);
+  final maxSteps = ref.watch(maxStepsProvider).totalSteps;  
+  return Column(
+    children: [
+  Text('$stepCount/$maxSteps', style: theme.textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600)),
+  
+  SizedBox(height: 15),
+  
+  Padding(
+    padding: const EdgeInsets.only(left: 10, right: 10),
+    child: LinearProgressIndicator(
+    value: stepCount / maxSteps, minHeight: 10,
+    valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+     backgroundColor: progressBackgroundColor, borderRadius: BorderRadius.circular(10),
     ),
-
-Padding(
-  padding: const EdgeInsets.all(8.0),
-  child: Container( height: sizeHeight/12, width: double.infinity, decoration: BoxDecoration( border: Border.all(width: 0.5, color: theme.colorScheme.onPrimaryContainer),
-  borderRadius: BorderRadius.all(Radius.elliptical(10, 10)), color: theme.colorScheme.surfaceContainer),
+  ),
+    ],
+  );
+  }),
+  
+  
+  
+  ],
+  ),
+  ),
+  
+  Padding(
+  padding: const EdgeInsets.only(top: 12),
+  child: Container( width: sizeWidth/2.5, height: sizeHeight/16,
+  decoration: BoxDecoration( color: Color(0xFFF6CFCF), borderRadius: BorderRadius.circular(10)),
+   child: Center(child: Text('Keep it up! 💪', style: theme.textTheme.headlineMedium,)),  ),
+  ) 
+    
+  ],
+  ),
+    ],
+  ),
+  SizedBox(height: 20),
+  
+  Row(
+    children: [
+  Padding(
+  padding: const EdgeInsets.only(top: 12),
+  child: Container( width: sizeWidth/2.3, height: sizeHeight/6,
+  decoration: BoxDecoration( color: Color(0xFFEFE2FF), borderRadius: BorderRadius.circular(10)),
+  child: Center(child: Column(
+  children: [
+  activityTitle(theme, Images.sleep, 'Sleep'),
+  SizedBox( height: sizeHeight/30),
+  SleepData(sleepData: sleepData)
+  ],
+  )
+  ),),
+  ),
+  
+  SizedBox(width: sizeWidth/20),
+  
+  Padding(
+  padding: const EdgeInsets.only(top: 12), 
+  child: Container( width: sizeWidth/2.3, height: sizeHeight/6,
+  decoration: BoxDecoration( color: Color(0xFFD8E6EC), borderRadius: BorderRadius.circular(10)),
+  child: Center(
   child: Column(
   children: [
-  Text('Active Calories', style: theme.textTheme.titleMedium),
-  SizedBox(height: 5),
-  Text('645 kCal', style: theme.textTheme.headlineMedium,)
-  ],
-),
-),
-),
-SizedBox(height: sizeHeight/40),
-   
-Row(
-  children: [
-    Container( width: sizeWidth/2, height: sizeHeight/4.5,
-    decoration: BoxDecoration(
-    color: Color(0xFFFFEBEB), borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
-    ),
-    child: Column(
-    children: [
-    activityTitle(theme, Images.heartRate, 'Heart Rate'),
-    SizedBox(height: 5),
-    Padding(
-    padding: const EdgeInsets.all(12),
-    child: Container( decoration: BoxDecoration(color: theme.colorScheme.surfaceContainer,  borderRadius: BorderRadius.circular(10)),
-    height: sizeHeight/7.5, width: sizeWidth/2.4,
-      child: Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10),
-    child: Column(
-    children: [
-HeartRateEqualizer(),
-Consumer( builder: (context, ref, child) =>  Text('                       ${ref.watch(analyticsProvider).bpm} Bpm', style: theme.textTheme.labelMedium!.copyWith(color: Colors.black)))
-],
-),
-)),
-)
-],
-),),
-SizedBox(width: 10),
-Column(
-children: [
-Container( height: sizeHeight/7, width: sizeWidth/2.5, decoration: BoxDecoration( color: Color(0xFFFFE8C6),
-borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
-),
-child: Column(children: [
-activityTitle(theme, Images.steps, 'Steps'),
-SizedBox(height: 15),
-
-Consumer( builder: (context, ref, child) {
-final stepCount = ref.watch(stepCountProvider);
-final maxSteps = ref.watch(maxStepsProvider).totalSteps;  
-return Column(
-  children: [
-Text('$stepCount/$maxSteps', style: theme.textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600)),
-
-SizedBox(height: 15),
-
-Padding(
-  padding: const EdgeInsets.only(left: 10, right: 10),
-  child: LinearProgressIndicator(
-  value: stepCount / maxSteps, minHeight: 10,
-  valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-   backgroundColor: progressBackgroundColor, borderRadius: BorderRadius.circular(10),
-  ),
-),
-  ],
-);
-}),
-
-
-
-],
-),
-),
-
-Padding(
-padding: const EdgeInsets.only(top: 12),
-child: Container( width: sizeWidth/2.5, height: sizeHeight/16,
-decoration: BoxDecoration( color: Color(0xFFF6CFCF), borderRadius: BorderRadius.circular(10)),
- child: Center(child: Text('Keep it up! 💪', style: theme.textTheme.headlineMedium,)),  ),
-) 
+  activityTitle(theme, Images.waterDrop, 'Water'),
+  SizedBox( height: sizeHeight/70),
   
-],
-),
-  ],
-),
-SizedBox(height: 20),
-
-Row(
-  children: [
-Padding(
-padding: const EdgeInsets.only(top: 12),
-child: Container( width: sizeWidth/2.3, height: sizeHeight/6,
-decoration: BoxDecoration( color: Color(0xFFEFE2FF), borderRadius: BorderRadius.circular(10)),
-child: Center(child: Column(
-children: [
-activityTitle(theme, Images.sleep, 'Sleep'),
-SizedBox( height: sizeHeight/30),
-SleepData(sleepData: sleepData)
-],
-)
-),),
-),
-
-SizedBox(width: sizeWidth/20),
-
-Padding(
-padding: const EdgeInsets.only(top: 12), 
-child: Container( width: sizeWidth/2.3, height: sizeHeight/6,
-decoration: BoxDecoration( color: Color(0xFFD8E6EC), borderRadius: BorderRadius.circular(10)),
-child: Center(
-child: Column(
-children: [
-activityTitle(theme, Images.waterDrop, 'Water'),
-SizedBox( height: sizeHeight/70),
-
-Stack(
-  children: [ WaterTracker( boxDecoration: BoxDecoration( color: whiteColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
+  Stack(
+    children: [ WaterTracker( boxDecoration: BoxDecoration( color: whiteColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
+      ),
+    sizeWidth: sizeWidth/2.5, sizeHeight: sizeHeight/11,
     ),
-  sizeWidth: sizeWidth/2.5, sizeHeight: sizeHeight/11,
+   Positioned(  left: 45, top: 30,
+  child: Consumer( builder: (context, ref, child) {
+  final cupsOfWaterDataRef = ref.watch(analyticsProvider).cupsOfWater;
+  return Text(' ${(cupsOfWaterDataRef / 125).toInt()}/8 Cups', style: theme.textTheme.bodySmall!.copyWith( fontWeight: FontWeight.bold));
+      }),
+   )
+  ])
+  ],
   ),
- Positioned(  left: 45, top: 30,
-child: Consumer( builder: (context, ref, child) {
-final cupsOfWaterDataRef = ref.watch(analyticsProvider).cupsOfWater;
-return Text(' ${(cupsOfWaterDataRef / 125).toInt()}/8 Cups', style: theme.textTheme.bodySmall!.copyWith( fontWeight: FontWeight.bold));
-    }),
- )
-])
-],
-),
-),
-),
-)
-],
-) 
-  
-],
-),
-),
-),
+  ),
+  ),
+  )
+  ],
+  ) 
+    
+  ],
+  ),
+  ),
+  ),
+  ),
 );
 }
 

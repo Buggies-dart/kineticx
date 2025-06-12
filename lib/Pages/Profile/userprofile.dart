@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kineticx/Navigation/navigation.dart';
 import 'package:kineticx/Pages/Profile/Widgets/userAvatar.dart';
 
 class UserProfile extends StatefulWidget {
@@ -12,25 +13,36 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
 final theme = Theme.of(context);
-return Scaffold(
-body:  SingleChildScrollView( scrollDirection: Axis.vertical,
-  child: SafeArea( 
-  child: Column(
-    children: [ 
-  UserAvatar(),
-  SizedBox(height: 30),
-  
-  profileAction(theme, Icons.monitor_heart, 'Health Details', Icons.arrow_forward_ios, (){}),
-  profileAction(theme, Icons.monitor_heart, 'Health Details', Icons.arrow_forward_ios, (){}),
-  profileAction(theme, Icons.monitor_heart, 'Health Details', Icons.arrow_forward_ios, (){}),
-  profileAction(theme, Icons.notifications, 'Notifications', Icons.arrow_forward_ios, (){}),
-  profileAction(theme, Icons.settings_accessibility, 'Accessibility Settings', Icons.arrow_forward_ios, (){}),
-  
-  ]
-  
+
+return PopScope(
+canPop: false,
+onPopInvoked: (didPop){
+if (!didPop) {
+Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+return NavigationPage();
+}), (route) => false);
+}
+},
+  child: Scaffold(
+  body:  SingleChildScrollView( scrollDirection: Axis.vertical,
+    child: SafeArea( 
+    child: Column(
+      children: [ 
+    UserAvatar(),
+    SizedBox(height: 30),
+    
+    profileAction(theme, Icons.monitor_heart, 'Health Details', Icons.arrow_forward_ios, (){}),
+    profileAction(theme, Icons.monitor_heart, 'Health Details', Icons.arrow_forward_ios, (){}),
+    profileAction(theme, Icons.monitor_heart, 'Health Details', Icons.arrow_forward_ios, (){}),
+    profileAction(theme, Icons.notifications, 'Notifications', Icons.arrow_forward_ios, (){}),
+    profileAction(theme, Icons.settings_accessibility, 'Accessibility Settings', Icons.arrow_forward_ios, (){}),
+    
+    ]
+    
+    ),
+    ),
+  )
   ),
-  ),
-)
 );
   }
 

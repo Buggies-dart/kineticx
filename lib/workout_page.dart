@@ -27,112 +27,124 @@ final sizeHeight = MediaQuery.of(context).size.height;
 final sizeWidth = MediaQuery.of(context).size.width;
 
 // Workout Title
-
 final String workoutTitle = widget.workout[widget.index]['name'] ?? 'Workout';
-return Scaffold(
-floatingActionButton: floatingActionButton(theme, sizeWidth, sizeHeight, context, ref),
-floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-body: SingleChildScrollView( scrollDirection: Axis.vertical,
-  child: SafeArea(child: 
-  Padding(
-    padding: const EdgeInsets.only(left: 10, right: 10),
-    child: Column( crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-     Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
-       children: [
-    SizedBox( width: sizeWidth/1.5,
-  child: Text(workoutTitle.toUpperCase(), overflow: TextOverflow.fade, style:  theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900,fontSize: 25),)), 
-  Image.asset(Buttons.replace, width: 40, height: 40, color: theme.primaryColor,),
-       ],
-     ),
+
+return PopScope(
+canPop: false,
+onPopInvoked: (didPop){
+if (!didPop) {
+Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+final bodyPart = ref.read(bodyandImageProvider).bodyPart;
+final imageUrl = ref.read(bodyandImageProvider).imageUrl;
+return PopularWorkoutPage(bodyPart: bodyPart, imageUrl: imageUrl);
+}), (route) => false);
+}
+} ,
+  child: Scaffold(
+  floatingActionButton: floatingActionButton(theme, sizeWidth, sizeHeight, context, ref),
+  floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+  body: SingleChildScrollView( scrollDirection: Axis.vertical,
+    child: SafeArea(child: 
+    Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      child: Column( crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+       Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         children: [
+      SizedBox( width: sizeWidth/1.5,
+    child: Text(workoutTitle.toUpperCase(), overflow: TextOverflow.fade, style:  theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900,fontSize: 20),)), 
+    Image.asset(Buttons.replace, width: 40, height: 40, color: theme.primaryColor,),
+         ],
+       ),
+      
+      SizedBox( height: sizeHeight/60,),
     
-    SizedBox( height: sizeHeight/60,),
-  
-  Container(
-  width: sizeWidth, height: sizeHeight / 3,
-  decoration: BoxDecoration(
-  image: DecorationImage(
-    image: NetworkImage(widget.workout[widget.index]['gifUrl']), // Replace with your image path
-  fit: BoxFit.cover,),
-    borderRadius: BorderRadius.circular(10),
-     )
-    ),
-  SizedBox( height: sizeHeight/40,),
-   Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-  Text('DURATION', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20),),
-  SizedBox( width: sizeWidth/2.5,
-    child: Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    Container(
+    width: sizeWidth, height: sizeHeight / 3,
+    decoration: BoxDecoration(
+    image: DecorationImage(
+      image: NetworkImage(widget.workout[widget.index]['gifUrl']), // Replace with your image path
+    fit: BoxFit.cover,),
+      borderRadius: BorderRadius.circular(10),
+       )
+      ),
+    SizedBox( height: sizeHeight/40,),
+     Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+    Text('DURATION', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20),),
+    SizedBox( width: sizeWidth/2.5,
+      child: Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+      Container( height: 40, width: 40, decoration: BoxDecoration(color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3),
+     borderRadius: BorderRadius.all(Radius.elliptical(10, 10)) ),
+    child:  IconButton(onPressed: (){}, icon: Icon(Icons.remove),) ),
+      Text('00:20', style: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900, fontSize: 22 ),),
+     Row(
     children: [
     Container( height: 40, width: 40, decoration: BoxDecoration(color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3),
-   borderRadius: BorderRadius.all(Radius.elliptical(10, 10)) ),
-  child:  IconButton(onPressed: (){}, icon: Icon(Icons.remove),) ),
-    Text('00:20', style: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900, fontSize: 22 ),),
-   Row(
-  children: [
-  Container( height: 40, width: 40, decoration: BoxDecoration(color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3),
-  borderRadius: BorderRadius.all(Radius.elliptical(10, 10))),
-  child: IconButton(onPressed: (){}, icon: Icon(Icons.add),) )
-  ],
-  ),
+    borderRadius: BorderRadius.all(Radius.elliptical(10, 10))),
+    child: IconButton(onPressed: (){}, icon: Icon(Icons.add),) )
     ],
     ),
-  ),
+      ],
+      ),
+    ),
+    
+    ],
+     ),
+     SizedBox( height: sizeHeight/40,),
+    Text('DESCRIPTIONS', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20)),
+    Text(widget.workout[widget.index]['description'].toString(), style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),),
+     
+     SizedBox( height: sizeHeight/40,),
+    Text('INSTRUCTIONS', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20)),
+    Text(widget.workout[widget.index]['instructions'].toString(), style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),),
+     
+     SizedBox( height: sizeHeight/40,),
+    Text('FOCUS AREA', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20)),
+    SingleChildScrollView( scrollDirection: Axis.horizontal,
   
-  ],
-   ),
-   SizedBox( height: sizeHeight/40,),
-  Text('DESCRIPTIONS', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20)),
-  Text(widget.workout[widget.index]['description'].toString(), style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),),
-   
-   SizedBox( height: sizeHeight/40,),
-  Text('INSTRUCTIONS', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20)),
-  Text(widget.workout[widget.index]['instructions'].toString(), style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),),
-   
-   SizedBox( height: sizeHeight/40,),
-  Text('FOCUS AREA', style: theme.textTheme.titleMedium!.copyWith(color: theme.primaryColor, fontSize: 20)),
-  SingleChildScrollView( scrollDirection: Axis.horizontal,
-
-child: Row(
-children: [ 
-Container( height: sizeHeight/20, padding:  const EdgeInsets.symmetric(horizontal: 12),
-decoration: BoxDecoration( color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.all(Radius.elliptical(20, 20))),
-child: Row( 
-children: [
-Icon(Icons.circle, color: theme.primaryColor, size: 20,), 
-SizedBox(width: 5),
-Text(widget.workout[widget.index]['target'], style: theme.textTheme.titleMedium,),
-      
-],),
-),
-
-SizedBox( height: sizeHeight/15, width: sizeWidth/1.3,
-child: ListView.builder( scrollDirection: Axis.horizontal, itemCount: widget.workout[widget.index]['secondaryMusclesLength'], padding: EdgeInsets.only(top: 0),
-itemBuilder: (context, index) => 
-Row( 
-children: [Padding( padding: const EdgeInsets.only(left: 10),
-  child: Container(  height: sizeHeight/20, padding: const EdgeInsets.symmetric(horizontal: 12),
+  child: Row(
+  children: [ 
+  Container( height: sizeHeight/20, padding:  const EdgeInsets.symmetric(horizontal: 12),
   decoration: BoxDecoration( color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.all(Radius.elliptical(20, 20))),
-  child: Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  child: Row( 
   children: [
   Icon(Icons.circle, color: theme.primaryColor, size: 20,), 
   SizedBox(width: 5),
-  Text(widget.workout[widget.index]['secondaryMuscles'][index] ?? '', style: theme.textTheme.titleMedium, overflow: TextOverflow.ellipsis,),
+  Text(widget.workout[widget.index]['target'], style: theme.textTheme.titleMedium,),
+        
   ],),
   ),
-),
-]),
-   
-),
-      ),
-      ]),
+  
+  SizedBox( height: sizeHeight/15, width: sizeWidth/1.3,
+  child: ListView.builder( physics: NeverScrollableScrollPhysics(), scrollDirection: Axis.horizontal, itemCount: widget.workout[widget.index]['secondaryMusclesLength'], padding: EdgeInsets.only(top: 0),
+  itemBuilder: (context, index) => 
+  Row( 
+  children: [Padding( padding: const EdgeInsets.only(left: 10),
+    child: Container(  height: sizeHeight/20, padding: const EdgeInsets.symmetric(horizontal: 12),
+    decoration: BoxDecoration( color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.all(Radius.elliptical(20, 20))),
+    child: Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+    Icon(Icons.circle, color: theme.primaryColor, size: 20,), 
+    SizedBox(width: 5),
+    Text(widget.workout[widget.index]['secondaryMuscles'][index] ?? '', style: theme.textTheme.titleMedium, overflow: TextOverflow.ellipsis,),
+    ],),
+    ),
   ),
-   SizedBox( height: sizeHeight/10,),
-    ]
+  ]),
+     
   ),
-  ),
-  ),
-));
+        ),
+        ]),
+    ),
+     SizedBox( height: sizeHeight/10,),
+      ]
+    ),
+    ),
+    ),
+  )),
+);
     
 }
 
