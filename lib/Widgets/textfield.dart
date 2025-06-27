@@ -25,7 +25,8 @@ padding: const EdgeInsets.all(10),
 child: TextField( controller: widget.controller, style: theme.textTheme.bodyMedium, obscureText:  showHidePassword ? obscureText : false,
 decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none), focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: theme.primaryColor, width: 1)), 
 enabledBorder: widget.errorBorder, hintText: 'Enter ${widget.text}', hintStyle: theme.textTheme.bodyMedium!.copyWith(color: const Color.fromARGB(255, 53, 53, 53)),
-filled: true, fillColor: theme.colorScheme.tertiaryContainer, prefixIcon: Icon(widget.hintIcon, size: 25), suffixIcon: showHidePassword ?
+filled: true, fillColor: theme.colorScheme.tertiaryContainer, prefixIcon: Icon(widget.hintIcon, size: 25), 
+suffixIcon: showHidePassword ?
 IconButton(onPressed: (){
 setState(() {
 obscureText = !obscureText;

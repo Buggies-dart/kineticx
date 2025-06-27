@@ -167,7 +167,6 @@ void signUp () async{
 setState(() {
 isValueEmpty = controllerName.text.trim().isEmpty || controllerMail.text.trim().isEmpty || controllerPass.text.trim().isEmpty || confirmPassController.text.trim().isEmpty || phoneNumber == null;
 });
-print('isValueEmpty: $isValueEmpty');
 if (!isValueEmpty) {
 if (controllerPass.text == confirmPassController.text) {
 setState(() {
